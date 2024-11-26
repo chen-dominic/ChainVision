@@ -3,4 +3,6 @@
 ################################################################################
 
 /ChainVisionApp/.vs
-/ChainVisionApp/ChainVisionApp/bin/Debug/net6.0
+/ChainVisionApp/ChainVisionApp/bin/
+/ChainVisionApp/ChainVisionApp/obj/
+*.user
