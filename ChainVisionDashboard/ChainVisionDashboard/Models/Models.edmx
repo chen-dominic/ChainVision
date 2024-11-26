@@ -1,0 +1,375 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="ChainVisionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="__EFMigrationsHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+          </Key>
+          <Property Name="MigrationId" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="ProductVersion" Type="nvarchar" MaxLength="32" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ChainVision.dbo.MaterialDisruption' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="MaterialDisruption">
+          <Key>
+            <PropertyRef Name="NewsId" />
+            <PropertyRef Name="MaterialId" />
+            <PropertyRef Name="DisruptionId" />
+          </Key>
+          <Property Name="NewsId" Type="int" Nullable="false" />
+          <Property Name="MaterialId" Type="int" Nullable="false" />
+          <Property Name="DisruptionId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Materials">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="MaterialId" Type="int" Nullable="false" />
+          <Property Name="MaterialName" Type="nvarchar" MaxLength="100" Nullable="false" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ArticleId" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="DisplayText" Type="nvarchar(max)" />
+          <Property Name="Description" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="SeverityRatingId" Type="tinyint" />
+          <Property Name="PublishedDateUTC" Type="datetime" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="100" />
+          <Property Name="ArticleUrl" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6013: The table/view 'ChainVision.dbo.ProductDisruption' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="ProductDisruption">
+          <Property Name="NewsId" Type="int" />
+          <Property Name="ProductId" Type="int" />
+          <Property Name="DisruptionId" Type="int" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ChainVision.dbo.ProductMaterials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="ProductMaterials">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="MaterialId" />
+          </Key>
+          <Property Name="ProductId" Type="int" Nullable="false" />
+          <Property Name="MaterialId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ImageUrl" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="SeverityRating">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="UpdatedTime">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="LastUpdatedTimeUTC" Type="datetime" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'ChainVision.dbo.VwHighSeverity' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="VwHighSeverity">
+          <Key>
+            <PropertyRef Name="NewsId" />
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="Title" />
+            <PropertyRef Name="NewsDescription" />
+            <PropertyRef Name="PublishedDateUTC" />
+            <PropertyRef Name="ArticleUrl" />
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="NewsId" Type="int" Nullable="false" />
+          <Property Name="ArticleId" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" Nullable="false" />
+          <Property Name="DisplayText" Type="nvarchar(max)" />
+          <Property Name="NewsDescription" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="PublishedDateUTC" Type="datetime" Nullable="false" />
+          <Property Name="Country" Type="nvarchar" MaxLength="100" />
+          <Property Name="ArticleUrl" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="SeverityDescription" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastUpdatedTimeUTC" Type="datetime" />
+        </EntityType>
+        <EntityContainer Name="ChainVisionModelStoreContainer">
+          <EntitySet Name="__EFMigrationsHistory" EntityType="Self.__EFMigrationsHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Materials" EntityType="Self.Materials" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="News" EntityType="Self.News" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SeverityRating" EntityType="Self.SeverityRating" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UpdatedTime" EntityType="Self.UpdatedTime" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MaterialDisruption" EntityType="Self.MaterialDisruption" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [MaterialDisruption].[NewsId] AS [NewsId], 
+    [MaterialDisruption].[MaterialId] AS [MaterialId], 
+    [MaterialDisruption].[DisruptionId] AS [DisruptionId]
+    FROM [dbo].[MaterialDisruption] AS [MaterialDisruption]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="ProductMaterials" EntityType="Self.ProductMaterials" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [ProductMaterials].[ProductId] AS [ProductId], 
+    [ProductMaterials].[MaterialId] AS [MaterialId]
+    FROM [dbo].[ProductMaterials] AS [ProductMaterials]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="VwHighSeverity" EntityType="Self.VwHighSeverity" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [VwHighSeverity].[NewsId] AS [NewsId], 
+    [VwHighSeverity].[ArticleId] AS [ArticleId], 
+    [VwHighSeverity].[Title] AS [Title], 
+    [VwHighSeverity].[DisplayText] AS [DisplayText], 
+    [VwHighSeverity].[NewsDescription] AS [NewsDescription], 
+    [VwHighSeverity].[PublishedDateUTC] AS [PublishedDateUTC], 
+    [VwHighSeverity].[Country] AS [Country], 
+    [VwHighSeverity].[ArticleUrl] AS [ArticleUrl], 
+    [VwHighSeverity].[Id] AS [Id], 
+    [VwHighSeverity].[SeverityDescription] AS [SeverityDescription], 
+    [VwHighSeverity].[LastUpdatedTimeUTC] AS [LastUpdatedTimeUTC]
+    FROM [dbo].[VwHighSeverity] AS [VwHighSeverity]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ChainVisionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="C__EFMigrationsHistory">
+          <Key>
+            <PropertyRef Name="MigrationId" />
+          </Key>
+          <Property Name="MigrationId" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProductVersion" Type="String" MaxLength="32" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Material">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="MaterialId" Type="Int32" Nullable="false" />
+          <Property Name="MaterialName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="News">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ArticleId" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DisplayText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SeverityRatingId" Type="Byte" />
+          <Property Name="PublishedDateUTC" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ArticleUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ImageUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SeverityRating">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="UpdatedTime">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="LastUpdatedTimeUTC" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="MaterialDisruption">
+          <Key>
+            <PropertyRef Name="NewsId" />
+            <PropertyRef Name="MaterialId" />
+            <PropertyRef Name="DisruptionId" />
+          </Key>
+          <Property Name="NewsId" Type="Int32" Nullable="false" />
+          <Property Name="MaterialId" Type="Int32" Nullable="false" />
+          <Property Name="DisruptionId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProductMaterial">
+          <Key>
+            <PropertyRef Name="ProductId" />
+            <PropertyRef Name="MaterialId" />
+          </Key>
+          <Property Name="ProductId" Type="Int32" Nullable="false" />
+          <Property Name="MaterialId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="VwHighSeverity">
+          <Key>
+            <PropertyRef Name="NewsId" />
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="Title" />
+            <PropertyRef Name="NewsDescription" />
+            <PropertyRef Name="PublishedDateUTC" />
+            <PropertyRef Name="ArticleUrl" />
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="NewsId" Type="Int32" Nullable="false" />
+          <Property Name="ArticleId" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DisplayText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="NewsDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PublishedDateUTC" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Country" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ArticleUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="SeverityDescription" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastUpdatedTimeUTC" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityContainer Name="ChainVisionEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="C__EFMigrationsHistory" EntityType="Self.C__EFMigrationsHistory" />
+          <EntitySet Name="Materials" EntityType="Self.Material" />
+          <EntitySet Name="News" EntityType="Self.News" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="SeverityRatings" EntityType="Self.SeverityRating" />
+          <EntitySet Name="UpdatedTimes" EntityType="Self.UpdatedTime" />
+          <EntitySet Name="MaterialDisruptions" EntityType="Self.MaterialDisruption" />
+          <EntitySet Name="ProductMaterials" EntityType="Self.ProductMaterial" />
+          <EntitySet Name="VwHighSeverities" EntityType="Self.VwHighSeverity" />
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ChainVisionModelStoreContainer" CdmEntityContainer="ChainVisionEntities">
+          <EntitySetMapping Name="C__EFMigrationsHistory">
+            <EntityTypeMapping TypeName="ChainVisionModel.C__EFMigrationsHistory">
+              <MappingFragment StoreEntitySet="__EFMigrationsHistory">
+                <ScalarProperty Name="MigrationId" ColumnName="MigrationId" />
+                <ScalarProperty Name="ProductVersion" ColumnName="ProductVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Materials">
+            <EntityTypeMapping TypeName="ChainVisionModel.Material">
+              <MappingFragment StoreEntitySet="Materials">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+                <ScalarProperty Name="MaterialName" ColumnName="MaterialName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="ChainVisionModel.News">
+              <MappingFragment StoreEntitySet="News">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="DisplayText" ColumnName="DisplayText" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="SeverityRatingId" ColumnName="SeverityRatingId" />
+                <ScalarProperty Name="PublishedDateUTC" ColumnName="PublishedDateUTC" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="ArticleUrl" ColumnName="ArticleUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="ChainVisionModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SeverityRatings">
+            <EntityTypeMapping TypeName="ChainVisionModel.SeverityRating">
+              <MappingFragment StoreEntitySet="SeverityRating">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UpdatedTimes">
+            <EntityTypeMapping TypeName="ChainVisionModel.UpdatedTime">
+              <MappingFragment StoreEntitySet="UpdatedTime">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LastUpdatedTimeUTC" ColumnName="LastUpdatedTimeUTC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MaterialDisruptions">
+            <EntityTypeMapping TypeName="ChainVisionModel.MaterialDisruption">
+              <MappingFragment StoreEntitySet="MaterialDisruption">
+                <ScalarProperty Name="NewsId" ColumnName="NewsId" />
+                <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+                <ScalarProperty Name="DisruptionId" ColumnName="DisruptionId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProductMaterials">
+            <EntityTypeMapping TypeName="ChainVisionModel.ProductMaterial">
+              <MappingFragment StoreEntitySet="ProductMaterials">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="MaterialId" ColumnName="MaterialId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VwHighSeverities">
+            <EntityTypeMapping TypeName="ChainVisionModel.VwHighSeverity">
+              <MappingFragment StoreEntitySet="VwHighSeverity">
+                <ScalarProperty Name="NewsId" ColumnName="NewsId" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="DisplayText" ColumnName="DisplayText" />
+                <ScalarProperty Name="NewsDescription" ColumnName="NewsDescription" />
+                <ScalarProperty Name="PublishedDateUTC" ColumnName="PublishedDateUTC" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="ArticleUrl" ColumnName="ArticleUrl" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="SeverityDescription" ColumnName="SeverityDescription" />
+                <ScalarProperty Name="LastUpdatedTimeUTC" ColumnName="LastUpdatedTimeUTC" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
