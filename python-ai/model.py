@@ -1,6 +1,34 @@
 public class FGFSupplyChainIngredients
 {
     // Comprehensive ingredient mapping for FGF products
+private Dictionary<string, float> riskKeywords = new Dictionary<string, float>
+    {
+        // Existing Keywords
+        { "trade ban", 0.9 },
+        { "export restriction", 0.8 },
+        { "crop failure", 0.7 },
+        { "production halt", 0.8 },
+        { "embargo", 0.9 },
+        { "climate impact", 0.6 },
+        
+        // New Baker-Specific and Supply Chain Risk Keywords
+        { "agricultural drought", 0.7 },
+        { "pest infestation", 0.6 },
+        { "transportation strike", 0.8 },
+        { "port closure", 0.7 },
+        { "currency fluctuation", 0.5 },
+        { "geopolitical tension", 0.7 },
+        { "sanction", 0.8 },
+        { "food safety alert", 0.9 },
+        { "logistics disruption", 0.7 },
+        { "warehouse fire", 0.6 },
+        { "pandemic impact", 0.8 },
+        { "transportation blockade", 0.8 },
+        { "energy crisis", 0.6 },
+        { "regulatory change", 0.5 }
+    };
+
+    // Expanded Ingredient Details with More Source Countries
     public Dictionary<string, IngredientDetails> CriticalIngredients = new Dictionary<string, IngredientDetails>
     {
         {
@@ -18,7 +46,11 @@ public class FGFSupplyChainIngredients
                     { "Canada", 0.7 },
                     { "USA", 0.6 },
                     { "Ukraine", 0.5 },
-                    { "Argentina", 0.4 }
+                    { "Argentina", 0.4 },
+                    { "Russia", 0.5 },
+                    { "Australia", 0.4 },
+                    { "India", 0.3 },
+                    { "Kazakhstan", 0.3 }
                 }
             }
         },
@@ -35,7 +67,11 @@ public class FGFSupplyChainIngredients
                 {
                     { "USA", 0.6 },
                     { "Netherlands", 0.5 },
-                    { "France", 0.4 }
+                    { "France", 0.4 },
+                    { "Germany", 0.4 },
+                    { "Belgium", 0.3 },
+                    { "China", 0.3 },
+                    { "Brazil", 0.2 }
                 }
             }
         },
@@ -52,7 +88,11 @@ public class FGFSupplyChainIngredients
                 {
                     { "China", 0.7 },
                     { "India", 0.6 },
-                    { "Egypt", 0.5 }
+                    { "Egypt", 0.5 },
+                    { "Argentina", 0.4 },
+                    { "Spain", 0.3 },
+                    { "Mexico", 0.3 },
+                    { "USA", 0.2 }
                 }
             }
         },
@@ -69,7 +109,12 @@ public class FGFSupplyChainIngredients
                 {
                     { "Canada", 0.7 },
                     { "USA", 0.6 },
-                    { "New Zealand", 0.5 }
+                    { "New Zealand", 0.5 },
+                    { "Germany", 0.4 },
+                    { "France", 0.4 },
+                    { "Netherlands", 0.3 },
+                    { "Australia", 0.3 },
+                    { "India", 0.2 }
                 }
             }
         },
@@ -86,7 +131,11 @@ public class FGFSupplyChainIngredients
                 {
                     { "Ghana", 0.7 },
                     { "Ivory Coast", 0.6 },
-                    { "Brazil", 0.5 }
+                    { "Brazil", 0.5 },
+                    { "Indonesia", 0.4 },
+                    { "Nigeria", 0.3 },
+                    { "Cameroon", 0.3 },
+                    { "Ecuador", 0.2 }
                 }
             }
         }
@@ -144,6 +193,7 @@ public class FGFSupplyChainIngredients
         var riskKeywords = new Dictionary<string, float>
         {
             { "trade ban", 0.9 },
+            {"chain disruption", 0.9}
             { "export restriction", 0.8 },
             { "crop failure", 0.7 },
             { "production halt", 0.8 },
