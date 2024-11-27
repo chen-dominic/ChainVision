@@ -33,6 +33,7 @@ namespace ChainVisionApp.Controllers
                     ImageUrl = group.Key.ImageUrl,
                     Ingredients = string.Join(", ", group.Select(pd => pd.MaterialName)) // Join all ingredients for the product
                 })
+                .OrderBy(_ => _.ProductName)
                 .ToList(); // Execute the grouping and join operation in memory
 
             return View(products);
