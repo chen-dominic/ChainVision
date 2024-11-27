@@ -16,3 +16,48 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.box {
+    border-radius: 8px;
+    height: 200px;
+    width: 29%;
+    margin: 10px;
+    transition: transform 0.3s ease;
+}
+
+.box:hover{
+    transform: scale(1.13);
+    border: 2px solid black;
+}
+
+.news-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.news-item {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.news-item h5 { 
+    margin: 0;
+    font-size: 18px;
+}
+
+.news-item p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    padding-top: 2%;
+}
