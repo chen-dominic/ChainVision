@@ -20,10 +20,22 @@ namespace ChainVisionApp.Controllers
         {
             return View();
         }
-
-        public IActionResult Products ()
+        public IActionResult Products()
         {
-            return View();
+            // Fetch the data from the view first
+            var products = _cvContext.VwProductMaterialDetails
+                .ToList()  // Materialize the query to a list
+                .GroupBy(pd => new { pd.ProductId, pd.ProductName, pd.ImageUrl }) // Group by product information
+                .Select(group => new ProductViewModel
+                {
+                    Id = group.Key.ProductId,
+                    ProductName = group.Key.ProductName,
+                    ImageUrl = group.Key.ImageUrl,
+                    Ingredients = string.Join(", ", group.Select(pd => pd.MaterialName)) // Join all ingredients for the product
+                })
+                .ToList(); // Execute the grouping and join operation in memory
+
+            return View(products);
         }
 
         public IActionResult Privacy()

@@ -59,25 +59,34 @@
 <style>
     body {
         margin-bottom: 0;
+        background-color: #7ac142;
+        overflow-x: hidden;
     }
     .content {
         display: flex;
-        background-color: #7ac142;
-        overflow-x: hidden;
+        height: 100vh;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        height: 100vh;
+        color: white;
+        width: 300px;
+        font-family: "Poppins", sans-serif;
+        overflow-y: auto;
     }
 
     .body-content {
         background-color: white;
         border-radius: 25px;
-        margin-top: 10px;
-        margin-bottom: 10px;
+        margin: 10px 10px 10px 300px !important;
+        padding: 1rem;
+        height: calc(100vh - 20px);
+        width: 78%;
+        overflow-y: auto;
     }
-    .sidebar {
-        height: 100vh;
-        color: white;
-        width: 300px;
-        font-family: "Poppins", sans-serif;
-    }
+
     .logo{
         width: 50px;
     }
@@ -115,5 +124,19 @@
         font-size: 0.9rem;
         color: #3f6620;
         padding-left: 1.5rem;
+    }
+
+    ::-webkit-scrollbar {
+        width: 5px;
+        max-height: 80%;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #517038;
+        border-radius: 25px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #334a21;
     }
 </style>
