@@ -9,34 +9,29 @@
     <link rel="stylesheet" href="~/ChainVisionApp.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <nav class="col-md-3 col-lg-2 d-md-block sidebar">
-                <div class="position-sticky">
-                    <h5 class="px-3 py-2 border-bottom">ChainVisionApp</h5>
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" asp-area="" asp-controller="Home" asp-action="Index">
-                                Dashboard
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Products">
-                                Products
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </nav>
-
-            <!-- Main content -->
-            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main">
-                <div class="pb-3">
-                    @RenderBody()
-                </div>
-            </main>
-        </div>
+    <div class="content">
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar">
+            <div class="greeter">
+                <h1>Welcome</h1>
+            </div>
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" asp-area="" asp-controller="Home" asp-action="Index">
+                        Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Products">
+                        Products
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <main class="col-md-9 col-lg-10 ms-sm-auto px-md-4 body-content">
+            <div class="pb-3">
+                @RenderBody()
+            </div>
+        </main>
     </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -46,9 +41,40 @@
 </html>
 
 <style>
-    .sidebar{
-        background-color: black;
+    body {
+        margin-bottom: 0;
+    }
+    .content {
+        display: flex;
+        background-color: #06061c;
+        overflow-x: hidden;
+    }
+
+    .body-content {
+        background-color: white;
+        border-radius: 25px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+    .sidebar {
         height: 100vh;
+        color: white;
         width: 300px;
+    }
+
+    .sidebar .greeter {
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+    }
+
+    .sidebar .nav-link {
+        color: white;
+        padding: 0.75rem 1rem;
+    }
+
+    .sidebar .nav-link:hover {
+        background-color: #333366;
+        color: #fff;
     }
 </style>
