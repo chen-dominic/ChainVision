@@ -98,7 +98,7 @@ window.onload = function () {
             datasets: [
                 {
                     label: '',
-                    data: [1,2,3],
+                    data: [12,2,3],
                     backgroundColor: [
                         'red',
                         'blue', 

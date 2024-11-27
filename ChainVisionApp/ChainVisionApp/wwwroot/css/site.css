@@ -61,3 +61,15 @@ body {
     gap: 100px;
     padding-top: 2%;
 }
+
+body {
+    background-color: white;
+    font-family: "Poppins", sans-serif;
+}
+
+.title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-top: 1.3rem;
+}
