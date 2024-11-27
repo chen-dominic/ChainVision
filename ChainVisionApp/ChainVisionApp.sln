@@ -5,6 +5,8 @@ VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChainVisionApp", "ChainVisionApp\ChainVisionApp.csproj", "{235D95D1-427B-4763-A75F-74940A4EAE23}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataScrapeConsoleApp", "DataScrapeConsoleApp\DataScrapeConsoleApp.csproj", "{70C5DCC4-3621-4E29-8B38-175F64C6D729}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{235D95D1-427B-4763-A75F-74940A4EAE23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{235D95D1-427B-4763-A75F-74940A4EAE23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{235D95D1-427B-4763-A75F-74940A4EAE23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70C5DCC4-3621-4E29-8B38-175F64C6D729}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70C5DCC4-3621-4E29-8B38-175F64C6D729}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70C5DCC4-3621-4E29-8B38-175F64C6D729}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70C5DCC4-3621-4E29-8B38-175F64C6D729}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
