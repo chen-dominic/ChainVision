@@ -74,6 +74,27 @@ body {
     margin-top: 1.3rem;
 }
 
+.subtitle {
+    text-align: left;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.back-btn {
+    font-size: 3rem;
+    color: #7ac142;
+    transition: all .2s ease-in-out;
+    position: absolute;
+    top: 30px;
+    left: 330px;
+}
+
+.back-btn:hover {
+    transform: scale(1.02);
+    color: #86cf4c;
+}
+
 /* Button styling */
 button {
     padding: 10px 20px;
@@ -138,4 +159,3 @@ h2 {
     align-items: center;
     text-align: center;
 }
-
