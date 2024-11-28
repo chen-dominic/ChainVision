@@ -1,0 +1,120 @@
+﻿@model ChainVisionApp.Models.ProductNewsDetailViewModel
+@{
+    ViewData["Title"] = Model.ProductName + " Details";
+}
+
+<div class="container-fluid detail-container">
+    <a class="back-btn" href="javascript:history.back()">
+        <i class="fa-solid fa-circle-chevron-left"></i>
+    </a>
+    <h1 class="title">@Model.ProductName</h1>
+    <img src="@Model.ImageUrl" alt="@Model.ProductName" class="product-img" />
+
+    <div class="ingredient-list">
+        <p>@Model.Ingredients</p>
+    </div>
+
+    @if (Model.NewsMaterialData != null)
+    {
+        <div class="news-box">
+            <h2 class="subtitle">Related News</h2>
+            <table class="table table-striped prod-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Summary</th>
+                        <th>Published Date</th>
+                        <th>Country</th>
+                        <th>Material</th>
+                        <th>Severity</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var news in Model.NewsMaterialData)
+                    {
+                        <tr>
+                            <td>@news.Title</td>
+                            <td>@news.DisplayText</td>
+                            <td>@news.PublichedDateUtc.ToString("yyyy-MM-dd")</td>
+                            <td>@news.Country</td>
+                            <td>@news.MaterialName</td>
+                            <td style="background-color: @news.SeverityRatingColor; font-weight: 600">@news.SeverityRating</td>
+                            <td>
+                                <a href="@news.ArticleUrl" target="_blank" class="icon"><i class="fa-solid fa-up-right-from-square"></i></a>
+                                <div onclick="callApiPlaceholder(@news.NewsId)" class="icon"><i class="fa-solid fa-circle-question"></i></div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <h1 class="subtitle">No News Data</h1>
+    }
+
+</div>
+
+<style>
+    .detail-container{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    .product-img {
+        height: 200px;
+        width: auto;
+        border-radius: 25px;
+    }
+    .ingredient-list{
+        font-size: 0.8rem;
+        font-style: italic;
+    }
+    .news-box{
+        border: 1px solid black;
+        padding: 1rem;
+        border-radius: 15px;
+    }
+
+    .prod-table{
+        transition: all .2s ease-in-out;
+    }
+
+    .prod-table thead {
+        font-size: .9rem;
+        font-weight: 600;
+        background-color: #7ac142;
+        color: white;
+    }
+
+    .prod-table tbody {
+        font-size: .9rem;
+        font-weight: 400;
+    }
+
+    .prod-table tbody tr{
+        transition: all .1s linear;
+
+    }
+
+    .prod-table tbody tr:hover {
+        background-color: #dddedc;
+    }
+
+    .icon {
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    .icon:hover{
+        filter: grayscale(0.3);
+    }
+    .fa-up-right-from-square {
+        color: #2b3952;
+    }
+    .fa-circle-question {
+        color: #b89523;
+    }
+
+</style>

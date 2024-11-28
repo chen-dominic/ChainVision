@@ -7,5 +7,6 @@ namespace ChainVisionApp.Models.Data
     {
         public int Id { get; set; }
         public string? Description { get; set; }
+        public string? Hexcode { get; set; }
     }
 }
