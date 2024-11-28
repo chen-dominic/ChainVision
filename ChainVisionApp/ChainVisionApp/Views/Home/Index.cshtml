@@ -2,37 +2,33 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="Title">Dashboard</h1>
-</div>
-
-<div class="d-flex justify-content-center gap-4">
-    <div id="Price" class="box">
-        <canvas id="Price-Chart" width="400" height="200"></canvas>
-    </div>
-    <div id="Inventory" class="box">
-        <canvas id="Inventory-Chart" width="400" height="200"></canvas>
-    </div>
-    <div id="Tariffs" class="box">
-        <canvas id="Tarrif-Chart" width="400" height="200"></canvas>
-    </div>
-</div>
-<div class="container">
-    <div class="pb-3">
-            <h2>Latest News</h2>
-            <div id="news-container" class="news-container">
-                
+<div class="containerMain">
+        <div id="columnOne" class="columns-vertical">
+                <div class="pb-3">
+                    <h2>Latest News</h2>
+                    <div id="news-container" class="news-container">
+                        
+                    </div>
+                </div>
+        </div>
+        <div id="columnTwo" class="columns-vertical">
+            <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-4">
+                <h1 class="Title">Dashboard</h1>                    
+                <div id="Canvas-box" class="box" >
+                    <canvas id="Canvas-Main" width="400" height="200"></canvas>
+                </div>
             </div>
-    </div>
-    <div>
-        <h2>Alerts</h2>
-            <ul id="Alerts">
-
-            </ul>      
-    </div>
-</div>
-<div>
-    Last Updated: 11/12/2024 22:34
+            <div class="d-flex justify-content-center gap-2 mt-3">
+                <button id="Price">Price</button>
+                <button id="Inventory">Live Inventory</button>
+                <button id="Tariff">Tariff</button>
+            </div>
+        </div>
+        <div id="columnThree" class="columns-vertical">
+                <h2>Alerts</h2>
+                <ul id="Alerts">
+                </ul>   
+        </div>
 </div>
 
 <script>
@@ -57,64 +53,9 @@ function populateNews(news) {
     document.getElementById("news-container").appendChild(newsItem);
 }
 
-
-window.onload = function () {
-    var ctx = document.getElementById('Price-Chart').getContext('2d');
-
-    for (let i = 0; i < 19; i++) {
-        populateAlerts(i); // TODO put data here
-        if (i % 11 === 0) { //Clear the Alerts every 11 alerts generated
-            console.log("called");
-            document.getElementById("Alerts").innerHTML = '';
-        }
-    }
-
-    populateNews();
-
-    var Price = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'], // X-axis labels
-            datasets: [{
-                label: 'Chocolate',
-                data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06],
-                backgroundColor: 'brown',
-                borderColor: 'brown',
-                borderWidth: 1
-            },
-            {
-                label: 'Flour',
-                data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
-                backgroundColor: 'black',
-                borderColor: 'black',
-                borderWidth: 1
-            }
-            ]
-        },
-        options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Price Per Unit',
-                    font: {
-                        size: 15 // Font size for the title
-                    },
-                    padding: {
-                        bottom: 3
-                    }
-                }
-            },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-
-    var inv = document.getElementById('Inventory-Chart').getContext('2d');
-
-    var Inv = new Chart(inv, {
+function populateInventoryGraph() {
+    var inv = document.getElementById('Canvas-Main').getContext('2d');
+    myChart = new Chart(inv, {
         type: 'bar',
         data: {
             labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
@@ -122,12 +63,19 @@ window.onload = function () {
                 {
                     label: 'Coco',
                     data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06],
-                    backgroundColor: 'purple',
-                    borderColor: 'purple',
+                    backgroundColor: 'brown',
+                    borderColor: 'brown',
                     borderWidth: 1
                 },
                 {
                     label: 'Bananas',
+                    data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
+                    backgroundColor: 'yellow',
+                    borderColor: 'yellow',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Citrus',
                     data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
                     backgroundColor: 'orange',
                     borderColor: 'orange',
@@ -159,10 +107,63 @@ window.onload = function () {
             }
         }
     });
+}
 
-    var tar = document.getElementById('Tarrif-Chart').getContext('2d');
+function populatePriceGraph() {
+    var ctx = document.getElementById('Canvas-Main').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'], // X-axis labels
+            datasets: [{
+                label: 'Chocolate',
+                data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06],
+                backgroundColor: 'brown',
+                borderColor: 'brown',
+                borderWidth: 4
+            },
+            {
+                label: 'Flour',
+                data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 1
+            },
+            {
+                label: 'Blue Berries',
+                data: [22,34,21,12,33,22,2,2,22,22,22,22,22],
+                backgroundColor: 'blue',
+                borderColor: 'blue',
+                borderWidth: 8
+            }
+            ]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Price Per Unit',
+                    font: {
+                        size: 15 // Font size for the title
+                    },
+                    padding: {
+                        bottom: 3
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
 
-    var tarrif = new Chart(tar, {
+function populateTariffGraph() {
+    var tar = document.getElementById('Canvas-Main').getContext('2d');
+
+    myChart = new Chart(tar, {
         type: 'pie',
         data: {
             labels: ['CAD', 'USA', 'MEX'],
@@ -206,7 +207,40 @@ window.onload = function () {
             }
         }
     });
-
 }
 
+document.getElementById("Inventory").addEventListener('click', function () {
+    myChart.destroy();
+
+    populateInventoryGraph();
+});
+
+document.getElementById("Price").addEventListener('click', function () {
+    myChart.destroy();
+
+    populatePriceGraph();
+});
+
+document.getElementById("Tariff").addEventListener('click', function () {
+    myChart.destroy();
+
+    populateTariffGraph();
+});
+
+window.onload = function () {
+    for (let i = 0; i < 19; i++) {
+        populateAlerts(i); // TODO put data here
+        if (i % 11 === 0) { //Clear the Alerts every 11 alerts generated
+            console.log("called");
+            document.getElementById("Alerts").innerHTML = '';
+        }
+    }
+
+    populateNews();
+
+    populatePriceGraph(); // For a default graph on load
+
+}
 </script>
+
+
