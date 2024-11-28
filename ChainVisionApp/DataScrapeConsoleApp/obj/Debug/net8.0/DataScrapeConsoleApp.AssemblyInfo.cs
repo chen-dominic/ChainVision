@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DataScrapeConsoleApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c7ac82417087ef7c6065f7d0f8ca7f2225c080a9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+26ac99692685ad99d2e82aa9bc978afbc847682b")]
 [assembly: System.Reflection.AssemblyProductAttribute("DataScrapeConsoleApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DataScrapeConsoleApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

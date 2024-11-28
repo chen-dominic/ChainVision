@@ -21,12 +21,7 @@
     <div class="pb-3">
             <h2>Latest News</h2>
             <div id="news-container" class="news-container">
-                <!-- News items will be added here -->
                 
-                <ul>
-                    <li>Test</li>
-                    <li>Hello</li>
-                </ul>
             </div>
     </div>
     <div>
@@ -41,8 +36,8 @@
 </div>
 
 <script>
-    function timer() {
-    let counter = 0; 
+function timer() {
+    let counter = 0;
 
     setInterval(() => {
         console.log("Value: " + counter);
@@ -52,14 +47,29 @@
 
 function populateAlerts(alert) {
     let alertItem = document.createElement('li');
-    alertItem.innerText = "test"
+    alertItem.innerText = alert;
     document.getElementById("Alerts").appendChild(alertItem);
 }
 
+function populateNews(news) {
+    let newsItem = document.createElement("a");
+    newsItem.innerText = "testing news 121221111111111111111";
+    document.getElementById("news-container").appendChild(newsItem);
+}
 
 
 window.onload = function () {
     var ctx = document.getElementById('Price-Chart').getContext('2d');
+
+    for (let i = 0; i < 19; i++) {
+        populateAlerts(i); // TODO put data here
+        if (i % 11 === 0) { //Clear the Alerts every 11 alerts generated
+            console.log("called");
+            document.getElementById("Alerts").innerHTML = '';
+        }
+    }
+
+    populateNews();
 
     var Price = new Chart(ctx, {
         type: 'line',
@@ -67,21 +77,33 @@ window.onload = function () {
             labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'], // X-axis labels
             datasets: [{
                 label: 'Chocolate',
-                data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06], 
-                backgroundColor: 'brown', 
-                borderColor: 'brown', 
+                data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06],
+                backgroundColor: 'brown',
+                borderColor: 'brown',
                 borderWidth: 1
             },
-                {
-                    label: 'Flour', 
-                    data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06], 
-                    backgroundColor: 'black',
-                    borderColor: 'black',
-                    borderWidth: 1
-                }
+            {
+                label: 'Flour',
+                data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 1
+            }
             ]
         },
         options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Price Per Unit',
+                    font: {
+                        size: 15 // Font size for the title
+                    },
+                    padding: {
+                        bottom: 3
+                    }
+                }
+            },
             scales: {
                 y: {
                     beginAtZero: true
@@ -93,34 +115,46 @@ window.onload = function () {
     var inv = document.getElementById('Inventory-Chart').getContext('2d');
 
     var Inv = new Chart(inv, {
-        type: 'bar', 
+        type: 'bar',
         data: {
-            labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'], 
+            labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
             datasets: [
                 {
-                    label: 'Coco', 
-                    data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06], 
-                    backgroundColor: 'purple', 
-                    borderColor: 'purple', 
-                    borderWidth: 1 
+                    label: 'Coco',
+                    data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06],
+                    backgroundColor: 'purple',
+                    borderColor: 'purple',
+                    borderWidth: 1
                 },
                 {
-                    label: 'Bananas', 
+                    label: 'Bananas',
                     data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
-                    backgroundColor: 'orange', 
-                    borderColor: 'orange', 
-                    borderWidth: 1 
+                    backgroundColor: 'orange',
+                    borderColor: 'orange',
+                    borderWidth: 1
                 }
             ]
         },
         options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Live Current Inventory',
+                    font: {
+                        size: 15 // Font size for the title
+                    },
+                    padding: {
+                        bottom: 3
+                    }
+                }
+            },
             scales: {
                 x: {
-                    barPercentage: 0.8, 
+                    barPercentage: 0.8,
                     categoryPercentage: 0.9
                 },
                 y: {
-                    beginAtZero: true 
+                    beginAtZero: true
                 }
             }
         }
@@ -131,14 +165,14 @@ window.onload = function () {
     var tarrif = new Chart(tar, {
         type: 'pie',
         data: {
-            labels: ['CAD','USA','MEX'],
+            labels: ['CAD', 'USA', 'MEX'],
             datasets: [
                 {
                     label: '',
-                    data: [1,2,3],
+                    data: [0.33, 0.55, 0.1],
                     backgroundColor: [
                         'red',
-                        'blue', 
+                        'blue',
                         'yellow'
                     ],
                     borderWidth: 1
@@ -146,6 +180,18 @@ window.onload = function () {
             ]
         },
         options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Tariff Percentage by Country',
+                    font: {
+                        size: 15 // Font size for the title
+                    },
+                    padding: {
+                        bottom: 3
+                    }
+                }
+            },
             scales: {
                 x: {
                     barPercentage: 0.8,
@@ -161,5 +207,6 @@ window.onload = function () {
         }
     });
 
-};
+}
+
 </script>
