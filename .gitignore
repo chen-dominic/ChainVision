@@ -7,3 +7,4 @@
 /ChainVisionApp/ChainVisionApp/obj/
 *.user
 /.vs
+/ChainVisionApp/DataScrapeConsoleApp/bin/Debug/net8.0/DataScrapeConsoleApp.dll
