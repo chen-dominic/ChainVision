@@ -75,11 +75,6 @@ namespace ChainVisionApp.Models.Data
                 entity.ToTable("ProductDisruption");
             });
 
-            modelBuilder.Entity<ProductMaterial>(entity =>
-            {
-                entity.HasNoKey();
-            });
-
             modelBuilder.Entity<SeverityRating>(entity =>
             {
                 entity.ToTable("SeverityRating");
