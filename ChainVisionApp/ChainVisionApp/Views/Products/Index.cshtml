@@ -52,13 +52,15 @@
         @foreach (var product in Model)
         {
             <div class="col product-card" data-name="@product.ProductName">
-                <div class="card custom-card">
-                    <img src="@product.ImageUrl" class="card-img-top custom-img" alt="@product.ProductName" />
-                    <div class="card-body border-top">
-                        <h5 class="card-title">@product.ProductName</h5>
-                        <p class="card-text">Ingredients: @product.Ingredients</p>
+                <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="text-decoration-none">
+                    <div class="card custom-card">
+                        <img src="@product.ImageUrl" class="card-img-top custom-img" alt="@product.ProductName" />
+                        <div class="card-body border-top">
+                            <h5 class="card-title">@product.ProductName</h5>
+                            <p class="card-text">Ingredients: @product.Ingredients</p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
         }
     </div>
@@ -78,18 +80,21 @@
                     // Add filtered products
                     data.forEach(product => {
                         const productHtml = `
-                            <div class="col">
-                                <div class="card custom-card">
-                                    <img src="${product.imageUrl}" class="card-img-top custom-img" alt="${product.productName}" />
-                                    <div class="card-body border-top">
-                                        <h5 class="card-title">${product.productName}</h5>
-                                        <p class="card-text">Ingredients: ${product.ingredients}</p>
+                            <div class="col product-card" data-name="${product.productName}">
+                                <a href="/Products/Details/${product.id}" class="text-decoration-none">
+                                    <div class="card custom-card">
+                                        <img src="${product.imageUrl}" class="card-img-top custom-img" alt="${product.productName}" />
+                                        <div class="card-body border-top">
+                                            <h5 class="card-title">${product.productName}</h5>
+                                            <p class="card-text">Ingredients: ${product.ingredients}</p>
+                                        </div>
                                     </div>
-                                </div>
+                                </a>
                             </div>`;
                         $('#productsContainer').append(productHtml);
                     });
                 },
+
                 error: function () {
                     console.error('Failed to fetch products');
                 }
@@ -233,15 +238,16 @@
         overflow: hidden;
         transition: all .3s ease-in-out;
         cursor: pointer;
+        color: black;
     }
 
-        .custom-card:hover {
-            transform: scale(1.02);
-        }
+    .custom-card:hover {
+        transform: scale(1.02);
+    }
 
-            .custom-card:hover .card-body {
-                background-color: #dfe0de;
-            }
+    .custom-card:hover .card-body {
+        background-color: #dfe0de;
+    }
 
     .custom-img {
         width: 100%;

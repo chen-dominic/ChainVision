@@ -7,3 +7,5 @@
 /ChainVisionApp/ChainVisionApp/obj/
 *.user
 /.vs
+/ChainVisionApp/DataScrapeConsoleApp/bin/
+/ChainVisionApp/DataScrapeConsoleApp/obj/

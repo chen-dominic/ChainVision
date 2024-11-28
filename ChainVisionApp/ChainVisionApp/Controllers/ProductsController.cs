@@ -1,6 +1,7 @@
 ﻿using ChainVisionApp.Models;
 using ChainVisionApp.Models.Data;
 using Microsoft.AspNetCore.Mvc;
+using System.IO.Pipes;
 
 namespace ChainVisionApp.Controllers
 {
@@ -33,6 +34,90 @@ namespace ChainVisionApp.Controllers
                 .ToList(); // Execute the grouping and join operation in memory
 
             return View(products);
+        }
+
+        [Route("Details/{id}")]
+        public IActionResult Details(int id)
+        {
+            var productDetails = _cvContext.VwNewsProductDisruptionDetails
+                .Where(_ => _.ProductId == id)
+                .ToList()
+                .GroupBy(pd => new { pd.ProductId, pd.ProductName, pd.ImageUrl })
+                .Select(g => new ProductNewsDetailViewModel
+                {
+                    ProductId = g.Key.ProductId,
+                    ProductName = g.Key.ProductName,
+                    ImageUrl = g.Key.ImageUrl,
+                    Ingredients = GetIngredientsByProductId(g.Key.ProductId),
+                    NewsMaterialData = GetNewsByProductId(g.Key.ProductId)
+                })
+                .FirstOrDefault();
+
+            if (productDetails == null)
+            {
+                productDetails = _cvContext.VwProductMaterialDetails
+                .Where(_ => _.ProductId == id)
+                .ToList()
+                .GroupBy(pd => new { pd.ProductId, pd.ProductName, pd.ImageUrl })
+                .Select(g => new ProductNewsDetailViewModel
+                {
+                    ProductId = g.Key.ProductId,
+                    ProductName = g.Key.ProductName,
+                    ImageUrl = g.Key.ImageUrl,
+                    Ingredients = string.Join(", ", g.Select(pd => pd.MaterialName)),
+                    NewsMaterialData = null
+                })
+                .FirstOrDefault();
+                
+                if(productDetails == null)
+                {
+                    return NotFound();
+                }
+            }
+
+            return View(productDetails);
+        }
+
+        private string GetIngredientsByProductId(int productId)
+        {
+            string ingredients = "";
+            var ingredientList = _cvContext.VwProductMaterialDetails.Where(_ => _.ProductId == productId).ToList();
+            foreach(var i in ingredientList)
+            {
+                ingredients += i.MaterialName + ", ";
+            }
+            return ingredients.Substring(0, ingredients.Length - 2);
+        }
+
+        private List<NewsMaterialData> GetNewsByProductId(int productId)
+        {
+            List<NewsMaterialData> newsMaterialDatas = new List<NewsMaterialData>();
+            var relevantNews = _cvContext.VwNewsProductDisruptionDetails
+                                .Where(_ => _.ProductId == productId)
+                                .OrderByDescending(_ => _.PublishedDateUtc)
+                                .ToList();
+            foreach(var n in relevantNews)
+            {
+                string severityRating = _cvContext.SeverityRatings.Where(_ => _.Id == n.SeverityRatingId).Select(_ => _.Description).FirstOrDefault();
+                string severityRatingColor = _cvContext.SeverityRatings.Where(_ => _.Id == n.SeverityRatingId).Select(_ => _.Hexcode).FirstOrDefault(); ;
+                var newsDetails = new NewsMaterialData
+                {
+                    NewsId = n.NewsId,
+                    ArticleId = n.ArticleId,
+                    Title = n.Title,
+                    Description = n.Description,
+                    DisplayText = n.DisplayText,
+                    SeverityRating = severityRating,
+                    SeverityRatingColor = severityRatingColor,
+                    PublichedDateUtc = n.PublishedDateUtc,
+                    Country = n.Country,
+                    ArticleUrl = n.ArticleUrl,
+                    MaterialId = n.MaterialId,
+                    MaterialName = n.MaterialName,
+                };
+                newsMaterialDatas.Add(newsDetails);
+            }
+            return newsMaterialDatas;
         }
 
         [Route("Search")]
