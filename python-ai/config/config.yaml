@@ -1,0 +1,138 @@
+# Risk keywords with their associated scores
+risk_keywords:
+  "wheat": 5
+  "flour": 4
+  "sugar": 3
+  "yeast": 3
+  "oil": 2
+  "delivery delays": 5
+  "price increase": 4
+  "inflation": 3
+  "labor shortage": 5
+  "strike": 4
+  "natural disaster": 5
+  "pandemic": 5
+  "drought": 4
+  "trade restriction": 5
+  "economic crisis": 5
+  "crop failure": 4
+  "supply chain disruption": 5
+  "fuel shortage": 4
+  "transportation issues": 5
+  "global warming": 4
+  "climate change": 5
+  "harvest failure": 4
+  "tariffs": 4
+  "food safety scandal": 5
+  "food prices": 5
+  "supply chain disruptions": 4
+  "global": 2
+  "shortage": 5
+  "wheat": 5
+  "sugar": 5
+  "disruption": 4
+  "inflation": 3
+
+
+# Critical ingredients specific to a bakery company
+critical_ingredients:
+  "Wheat Flour":
+    keywords: ["wheat", "flour", "grain", "milling", "wheat flour"]
+  "Sugar":
+    keywords: ["sugar", "sweetener", "glucose", "fructose", "sucrose"]
+  "Yeast":
+    keywords: ["yeast", "baker's yeast", "fermentation", "leavening agent"]
+  "Butter":
+    keywords: ["butter", "margarine", "dairy", "butterfat"]
+  "Eggs":
+    keywords: ["egg", "eggs", "egg substitute", "egg whites", "egg yolk"]
+  "Oil":
+    keywords: ["oil", "vegetable oil", "canola oil", "olive oil", "sunflower oil"]
+  "Salt":
+    keywords: ["salt", "sodium", "sea salt", "table salt", "kosher salt"]
+  "Baking Powder":
+    keywords: ["baking powder", "raising agent", "leavening powder"]
+  "Milk":
+    keywords: ["milk", "dairy", "milk powder", "skim milk", "whole milk"]
+  "Chocolate":
+    keywords: ["chocolate", "cocoa", "dark chocolate", "milk chocolate", "chocolate chips"]
+  "Banana":
+    keywords: ["banana", "bananas", "banana puree"]
+  "Walnuts":
+    keywords: ["walnuts", "nut", "nuts", "walnut"]
+  "Brown Sugar":
+    keywords: ["brown sugar", "molasses", "light brown sugar", "dark brown sugar"]
+  "Raisins":
+    keywords: ["raisins", "dried grapes", "sultanas"]
+  "Oats":
+    keywords: ["oats", "oatmeal", "rolled oats", "instant oats"]
+  "Peanut Butter":
+    keywords: ["peanut butter", "peanuts", "nut butter"]
+  "Cinnamon":
+    keywords: ["cinnamon", "ground cinnamon", "cinnamon sticks"]
+  "Water":
+    keywords: ["water", "filtered water", "spring water"]
+  "Baking Soda":
+    keywords: ["baking soda", "sodium bicarbonate", "bicarbonate of soda"]
+
+# Negative keywords to help classify tone (indicating a disruption, risk, or problem)
+negative_keywords:
+  - "crisis"
+  - "failure"
+  - "disaster"
+  - "strike"
+  - "loss"
+  - "shutdown"
+  - "shortage"
+  - "out of stock"
+  - "delayed"
+  - "supply chain issues"
+  - "unavailability"
+  - "scarcity"
+  - "bankruptcy"
+  - "inflation"
+  - "famine"
+  - "collapse"
+  - "economic downturn"
+  - "pandemic"
+  - "lockdown"
+  - "emergency"
+  - "unrest"
+  - "food security"
+  - "trade embargo"
+  - "tariff"
+  - "wildfire"
+  - "storm"
+  - "flood"
+  - "earthquake"
+  - "drought"
+
+# Optional: Further expansion on specific regional risks or additional factors affecting the bakery supply chain
+regional_risks:
+  "weather_patterns":
+    description: "Severe weather changes such as extreme heat, storms, or frost."
+    keywords: ["heatwave", "frost", "storm", "flood", "hurricane"]
+  "economic_conditions":
+    description: "Economic downturns and financial instability that affect costs."
+    keywords: ["economic downturn", "recession", "bankruptcy", "default"]
+  "trade_policies":
+    description: "Changes in trade policies, tariffs, and restrictions that affect imports."
+    keywords: ["tariff", "trade embargo", "import restriction", "export ban"]
+  "labor_issues":
+    description: "Worker strikes, shortages, and other labor-related disruptions."
+    keywords: ["strike", "labor shortage", "work stoppage", "unemployment"]
+  "health_crisis":
+    description: "Pandemics or health-related crises that affect worker availability and supply."
+    keywords: ["pandemic", "virus", "health crisis", "lockdown", "quarantine"]
+
+# Additional ingredient tracking section
+ingredient_tracking:
+  include_in_all_articles: true
+  track_all_critical_ingredients: true
+  track_additional_ingredients:
+    - "blueberry"
+    - "vanilla extract"
+    - "peanut butter"
+  custom_ingredient_keywords:
+    blueberry: ["blueberry", "blueberries", "fruit"]
+    vanilla_extract: ["vanilla", "vanilla extract", "vanillin"]
