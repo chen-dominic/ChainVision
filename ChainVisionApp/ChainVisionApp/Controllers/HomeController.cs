@@ -18,7 +18,22 @@ namespace ChainVisionApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            var cocoaData = _cvContext.IngredientsDataCocoas.ToList();
+            var springWheatData = _cvContext.IngredientsDataSpringWheats.ToList();
+            var sugarData = _cvContext.IngredientsDataSugars.ToList();
+            var wheatData = _cvContext.IngredientsDataWheats.ToList();
+            var alertData = _cvContext.VwRecentHighSeverityNews.ToList();
+
+            var data = new DashboardViewModel
+            {
+                CocoaData = cocoaData,
+                SpringWheatData = springWheatData,
+                SugarData = sugarData,
+                WheatData = wheatData,
+                AlertNewsData = alertData,
+            };
+
+            return View(data);
         }
 
         public IActionResult Privacy()
