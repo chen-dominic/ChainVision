@@ -9,25 +9,24 @@
             }
 
 <div class="containerMain">
-    <div id="columnOne" class="columns-vertical">
-        <div class="pb-3">
-            <h2>Latest News</h2>
-            <div id="news-container" class="news-container">
-
+        <div id="columnOne" class="columns-vertical">
+            <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-4">
+                <h1 class="Title">Dashboard</h1>                    
+                <div id="Canvas-box" class="box" >
+                    <canvas id="Canvas-Main"></canvas>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
+                <button id="Price" class="Graph-Switch">Price</button>
+                <button id="Inventory" class="Graph-Switch">Live Inventory</button>
+                <button id="Tariff" class="Graph-Switch">Tariffs</button>
             </div>
         </div>
-    </div>
-    <div id="columnTwo" class="columns-vertical">
-        <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-4">
-            <h1 class="Title">Dashboard</h1>
-            <div id="Canvas-box" class="box">
-                <canvas id="Canvas-Main" width="400" height="200"></canvas>
-            </div>
-        </div>
-        <div class="d-flex justify-content-center gap-2 mt-3">
-            <button id="Price">Price</button>
-            <button id="Inventory">Live Inventory</button>
-            <button id="Tariff">Tariff</button>
+        <div id="columnTwo" class="columns-vertical">
+            <h2>Alerts</h2>
+                <ul id="Alerts">
+                
+                </ul>
         </div>
     </div>
     <div id="columnThree" class="columns-vertical">
@@ -36,6 +35,11 @@
         </ul>
     </div>
 </div>
+<footer>
+    <div>
+        Last Updated: 11/12/2024 19:34
+    </div>
+</footer>
 
 <script>
     function timer() {
@@ -53,78 +57,17 @@
         document.getElementById("Alerts").appendChild(alertItem);
     }
 
-    function populateNews(news) {
-        let newsItem = document.createElement("p");
-        newsItem.innerText = "U.S. Tariffs Affecting Food Prices";
-        
-        document.getElementById("news-container").appendChild(newsItem);
-    }
+function populateInventoryGraph() {
+    var inv = document.getElementById('Canvas-Main').getContext('2d');
+    myChart = new Chart(inv, {
+        type: 'bar',
+        data: {
+            labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
+            datasets: [
+                {
+                    label: 'Coco',
+                    data: [21.57, 20.27, 19.58, 39.42, 19.55, 18.54, 18.06],
 
-    function populateInventoryGraph() {
-        var inv = document.getElementById('Canvas-Main').getContext('2d');
-        myChart = new Chart(inv, {
-            type: 'bar',
-            data: {
-                labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'],
-                datasets: [
-                    {
-                        label: 'Coco',
-                        data: [21.57, 20.27, 19.58, 39.42, 19.55, 18.54, 18.06],
-                        backgroundColor: 'brown',
-                        borderColor: 'brown',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Bananas',
-                        data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
-                        backgroundColor: 'yellow',
-                        borderColor: 'yellow',
-                        borderWidth: 1
-                    },
-                    {
-                        label: 'Citrus',
-                        data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
-                        backgroundColor: 'orange',
-                        borderColor: 'orange',
-                        borderWidth: 1
-                    }
-                ]
-            },
-            options: {
-                plugins: {
-                    title: {
-                        display: true,
-                        text: 'Live Current Inventory',
-                        font: {
-                            size: 15 // Font size for the title
-                        },
-                        padding: {
-                            bottom: 3
-                        }
-                    }
-                },
-                scales: {
-                    x: {
-                        barPercentage: 0.8,
-                        categoryPercentage: 0.9
-                    },
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    }
-
-    function populatePriceGraph() {
-        var ctx = document.getElementById('Canvas-Main').getContext('2d');
-        myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'], // X-axis labels
-                datasets: [{
-                    label: 'Chocolate',
-                    data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06],
                     backgroundColor: 'brown',
                     borderColor: 'brown',
                     borderWidth: 4
@@ -167,23 +110,42 @@
         });
     }
 
-    function populateTariffGraph() {
-        var tar = document.getElementById('Canvas-Main').getContext('2d');
-
-        myChart = new Chart(tar, {
-            type: 'pie',
-            data: {
-                labels: ['CAD', 'USA', 'MEX'],
-                datasets: [
-                    {
-                        label: '',
-                        data: [0.33, 0.55, 0.1],
-                        backgroundColor: [
-                            'red',
-                            'blue',
-                            'yellow'
-                        ],
-                        borderWidth: 1
+function populatePriceGraph() {
+    var ctx = document.getElementById('Canvas-Main').getContext('2d');
+    myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June'], // X-axis labels
+            datasets: [{
+                label: 'Chocolate',
+                data: [21.57, 20.27, 19.58, 30.42, 19.55, 18.54, 18.06],
+                backgroundColor: 'brown',
+                borderColor: 'brown',
+                borderWidth: 4
+            },
+            {
+                label: 'Flour',
+                data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 1
+            },
+            {
+                label: 'Blue Berries',
+                data: [22, 34, 21, 12, 33, 22, 2, 2, 22, 22, 22, 22, 22],
+                backgroundColor: 'blue',
+                borderColor: 'blue',
+                borderWidth: 8
+            }
+            ]
+        },
+        options: {
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'High Severity Price Per Unit',
+                    font: {
+                        size: 15 // Font size for the title
                     },
                 ]
             },
@@ -234,20 +196,16 @@
         populateTariffGraph();
     });
 
-    window.onload = function () {
-        for (let i = 0; i < 19; i++) {
-            populateAlerts(i); // TODO put data here
-            if (i % 11 === 0) { //Clear the Alerts every 11 alerts generated
-                console.log("called");
-                document.getElementById("Alerts").innerHTML = '';
-            }
+
+window.onload = function () {
+    for (let i = 0; i < 50; i++) {
+        populateAlerts(i); // TODO put data here
+        if (i % 20 === 0) { //Clear the Alerts every 11 alerts generated
+            console.log("called");
+            document.getElementById("Alerts").innerHTML = '';
         }
 
-        populateNews();
+    populatePriceGraph(); // For a default graph on load
 
-        populatePriceGraph(); // For a default graph on load
-
-    }
+}
 </script>
-
-
