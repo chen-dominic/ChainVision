@@ -30,25 +30,6 @@ body {
     */
 }
 
-.news-item {
-    background-color: #f8f9fa;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.news-item h5 { 
-    margin: 0;
-    font-size: 18px;
-}
-
-.news-item p {
-    margin: 5px 0;
-    font-size: 14px;
-    color: #555;
-}
-
 .container {
     display: flex;
     flex-direction: row;

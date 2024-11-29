@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("NewsContentPopulator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+435d24877885fb27b103864b62a25725a2e8d9af")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1f343dd8cdf979811ec45275c7011febf1852386")]
 [assembly: System.Reflection.AssemblyProductAttribute("NewsContentPopulator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("NewsContentPopulator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
