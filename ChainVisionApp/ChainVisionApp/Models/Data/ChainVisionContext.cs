@@ -16,7 +16,10 @@ namespace ChainVisionApp.Models.Data
         {
         }
 
+        public virtual DbSet<IngredientsDataCocoa> IngredientsDataCocoas { get; set; } = null!;
+        public virtual DbSet<IngredientsDataSpringWheat> IngredientsDataSpringWheats { get; set; } = null!;
         public virtual DbSet<IngredientsDataSugar> IngredientsDataSugars { get; set; } = null!;
+        public virtual DbSet<IngredientsDataWheat> IngredientsDataWheats { get; set; } = null!;
         public virtual DbSet<Material> Materials { get; set; } = null!;
         public virtual DbSet<MaterialDisruption> MaterialDisruptions { get; set; } = null!;
         public virtual DbSet<News> News { get; set; } = null!;
@@ -28,6 +31,7 @@ namespace ChainVisionApp.Models.Data
         public virtual DbSet<VwHighSeverity> VwHighSeverities { get; set; } = null!;
         public virtual DbSet<VwNewsProductDisruptionDetail> VwNewsProductDisruptionDetails { get; set; } = null!;
         public virtual DbSet<VwProductMaterialDetail> VwProductMaterialDetails { get; set; } = null!;
+        public virtual DbSet<VwRecentHighSeverityNews> VwRecentHighSeverityNews { get; set; } = null!;
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,35 +44,58 @@ namespace ChainVisionApp.Models.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<IngredientsDataCocoa>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Ingredients_Data_Cocoa");
+
+                entity.Property(e => e.Cocoa).HasMaxLength(50);
+
+                entity.Property(e => e.Last).HasMaxLength(50);
+
+                entity.Property(e => e.Time).HasColumnType("date");
+            });
+
+            modelBuilder.Entity<IngredientsDataSpringWheat>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("Ingredients_Data_Spring_Wheat");
+
+                entity.Property(e => e.Last).HasMaxLength(50);
+
+                entity.Property(e => e.SpringWheat)
+                    .HasMaxLength(50)
+                    .HasColumnName("Spring_Wheat");
+
+                entity.Property(e => e.Time).HasColumnType("date");
+            });
+
             modelBuilder.Entity<IngredientsDataSugar>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToTable("Ingredients_Data_Sugar");
+                entity.ToTable("Ingredients_DataSugar");
 
-                entity.Property(e => e.Column1)
-                    .HasMaxLength(50)
-                    .HasColumnName("column1");
+                entity.Property(e => e.Last).HasMaxLength(50);
 
-                entity.Property(e => e.Column2)
-                    .HasMaxLength(50)
-                    .HasColumnName("column2");
+                entity.Property(e => e.Sugar).HasMaxLength(50);
 
-                entity.Property(e => e.Column3)
-                    .HasMaxLength(50)
-                    .HasColumnName("column3");
+                entity.Property(e => e.Time).HasColumnType("date");
+            });
 
-                entity.Property(e => e.Column4)
-                    .HasMaxLength(50)
-                    .HasColumnName("column4");
+            modelBuilder.Entity<IngredientsDataWheat>(entity =>
+            {
+                entity.HasNoKey();
 
-                entity.Property(e => e.Column5)
-                    .HasMaxLength(50)
-                    .HasColumnName("column5");
+                entity.ToTable("Ingredients_Data_Wheat");
 
-                entity.Property(e => e.Column6)
-                    .HasMaxLength(50)
-                    .HasColumnName("column6");
+                entity.Property(e => e.Last).HasMaxLength(50);
+
+                entity.Property(e => e.Time).HasColumnType("date");
+
+                entity.Property(e => e.Wheat).HasMaxLength(50);
             });
 
             modelBuilder.Entity<Material>(entity =>
@@ -183,6 +210,27 @@ namespace ChainVisionApp.Models.Data
                 entity.Property(e => e.MaterialName).HasMaxLength(255);
 
                 entity.Property(e => e.ProductName).HasMaxLength(255);
+            });
+
+            modelBuilder.Entity<VwRecentHighSeverityNews>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("vw_RecentHighSeverityNews");
+
+                entity.Property(e => e.ArticleId).HasMaxLength(255);
+
+                entity.Property(e => e.Country).HasMaxLength(100);
+
+                entity.Property(e => e.MaterialName).HasMaxLength(255);
+
+                entity.Property(e => e.ProductName).HasMaxLength(255);
+
+                entity.Property(e => e.PublishedDateUtc)
+                    .HasColumnType("datetime")
+                    .HasColumnName("PublishedDateUTC");
+
+                entity.Property(e => e.Title).HasMaxLength(500);
             });
 
             OnModelCreatingPartial(modelBuilder);
