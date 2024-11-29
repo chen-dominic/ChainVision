@@ -1,58 +1,30 @@
 import spacy
 
-# Load spaCy model
-nlp = spacy.load("en_core_web_sm")
-
 class RiskAssessment:
-    def __init__(self, risk_keywords, critical_ingredients, region_weights=None):
-        """
-        Initializes the risk assessment with keywords, critical ingredients, and optional region-specific weights.
-        """
+    def __init__(self, risk_keywords, critical_ingredients):
         self.risk_keywords = risk_keywords
         self.critical_ingredients = critical_ingredients
-        self.region_weights = region_weights or {}
+        self.nlp = spacy.load("en_core_web_sm")
 
-    def assess_article(self, content, country=None):
+    def assess_article(self, content):
         """
-        Calculates the risk score for the content based on keywords, context, and country relevance.
+        Calculate the risk score for an article based on keywords.
         """
-        score = 0
-        content_lower = content.lower()
-
-        # Keyword-based scoring with context relevance
+        risk_score = 0
         for keyword, weight in self.risk_keywords.items():
-            if keyword in content_lower:
-                # Boost for bakery-critical contexts
-                if keyword in ["wheat", "sugar", "flour", "oil", "food"]:
-                    weight *= 1.5
-                # Deprioritize unrelated contexts like steel
-                if "steel" in content_lower and keyword == "tariff":
-                    continue
-                score += weight
-
-        # Critical ingredient scoring
-        for ingredient, data in self.critical_ingredients.items():
-            for keyword in data["keywords"]:
-                if keyword in content_lower:
-                    score += data.get("criticality_score", 1)
-
-        # Region-specific weighting
-        if country:
-            for region, weight in self.region_weights.items():
-                if region.lower() in (country or []):
-                    score *= weight
-
-        return max(score, 0.1)  # Ensure a base score
+            if keyword in content.lower():
+                risk_score += weight
+        return risk_score
 
     def get_risk_level(self, score):
         """
-        Maps the risk score to a risk level, including Very Low to Critical.
+        Determine the risk level based on the risk score.
         """
-        if score >= 15:
+        if score >= 10:
             return "Critical"
-        elif score >= 10:
+        elif score >= 7:
             return "High"
-        elif score >= 5:
+        elif score >= 4:
             return "Medium"
         elif score >= 2:
             return "Low"
@@ -60,8 +32,16 @@ class RiskAssessment:
             return "Very Low"
 
     def extract_ingredients(self, content):
-        """
-        Extracts ingredient mentions using spaCy's Named Entity Recognition (NER).
-        """
-        doc = nlp(content)
-        return [ent.text for ent in doc.ents if ent.label_ == "PRODUCT"]
+        ingredients = []
+        for ingredient, data in self.critical_ingredients.items():
+            for keyword in data['keywords']:
+                if keyword.lower() in content.lower():
+                    ingredients.append(ingredient)
+        return ingredients
+        
+        doc = self.nlp(content)
+        ingredients_found = []
+        for ent in doc.ents:
+            if ent.label_ == "PRODUCT" and ent.text.lower() in self.critical_ingredients:
+                ingredients_found.append(ent.text)
+        return ingredients_found

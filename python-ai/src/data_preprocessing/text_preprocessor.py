@@ -1,13 +1,10 @@
 import string
 
 class TextPreprocessor:
-    """
-    Handles text cleaning and preprocessing.
-    """
+    def __init__(self):
+        pass
 
-    @staticmethod
-    def preprocess(content):
-        """
-        Removes punctuation and converts content to lowercase.
-        """
-        return content.translate(str.maketrans("", "", string.punctuation)).lower()
+    def preprocess(self, article_content):
+        cleaned_text = article_content.lower()  # Convert to lowercase
+        cleaned_text = ''.join([char for char in cleaned_text if char.isalnum() or char.isspace()])  # Remove punctuation
+        return cleaned_text

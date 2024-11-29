@@ -24,15 +24,6 @@ risk_keywords:
   "harvest failure": 4
   "tariffs": 4
   "food safety scandal": 5
-  "food prices": 5
-  "supply chain disruptions": 4
-  "global": 2
-  "shortage": 5
-  "wheat": 5
-  "sugar": 5
-  "disruption": 4
-  "inflation": 3
-
 
 # Critical ingredients specific to a bakery company
 critical_ingredients:
@@ -131,8 +122,9 @@ ingredient_tracking:
   track_all_critical_ingredients: true
   track_additional_ingredients:
     - "blueberry"
-    - "vanilla extract"
+    - "vanilla"
     - "peanut butter"
   custom_ingredient_keywords:
     blueberry: ["blueberry", "blueberries", "fruit"]
     vanilla_extract: ["vanilla", "vanilla extract", "vanillin"]
+
