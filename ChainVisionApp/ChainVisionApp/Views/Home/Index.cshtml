@@ -1,6 +1,12 @@
-﻿@{
+﻿@model ChainVisionApp.Models.DashboardViewModel
+@{
     ViewData["Title"] = "ChainVision";
 }
+
+@foreach(var e in Model.SugarData)
+            {
+                <p>@e.Sugar</p>
+            }
 
 <div class="containerMain">
         <div id="columnOne" class="columns-vertical">
@@ -20,8 +26,14 @@
             <h2>Alerts</h2>
                 <ul id="Alerts">
                 
-                </ul>   
+                </ul>
         </div>
+    </div>
+    <div id="columnThree" class="columns-vertical">
+        <h2>Alerts</h2>
+        <ul id="Alerts">
+        </ul>
+    </div>
 </div>
 <footer>
     <div>
@@ -30,20 +42,20 @@
 </footer>
 
 <script>
-function timer() {
-    let counter = 0;
+    function timer() {
+        let counter = 0;
 
-    setInterval(() => {
-        console.log("Value: " + counter);
-        populateAlerts(counter);
-    }, 60000); // Every minute
-}
+        setInterval(() => {
+            console.log("Value: " + counter);
+            populateAlerts(counter);
+        }, 60000); // Every minute
+    }
 
-function populateAlerts(alert) {
-    let alertItem = document.createElement('li');
-    alertItem.innerText = alert;
-    document.getElementById("Alerts").appendChild(alertItem);
-}
+    function populateAlerts(alert) {
+        let alertItem = document.createElement('li');
+        alertItem.innerText = alert;
+        document.getElementById("Alerts").appendChild(alertItem);
+    }
 
 function populateInventoryGraph() {
     var inv = document.getElementById('Canvas-Main').getContext('2d');
@@ -55,51 +67,48 @@ function populateInventoryGraph() {
                 {
                     label: 'Coco',
                     data: [21.57, 20.27, 19.58, 39.42, 19.55, 18.54, 18.06],
+
                     backgroundColor: 'brown',
                     borderColor: 'brown',
+                    borderWidth: 4
+                },
+                {
+                    label: 'Flour',
+                    data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
+                    backgroundColor: 'black',
+                    borderColor: 'black',
                     borderWidth: 1
                 },
                 {
-                    label: 'Bananas',
-                    data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
-                    backgroundColor: 'yellow',
-                    borderColor: 'yellow',
-                    borderWidth: 1
-                },
-                {
-                    label: 'Citrus',
-                    data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
-                    backgroundColor: 'orange',
-                    borderColor: 'orange',
-                    borderWidth: 1
+                    label: 'Blue Berries',
+                    data: [22, 34, 21, 12, 33, 22, 2, 2, 22, 22, 22, 22, 22],
+                    backgroundColor: 'blue',
+                    borderColor: 'blue',
+                    borderWidth: 8
                 }
-            ]
-        },
-        options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Live Current Inventory',
-                    font: {
-                        size: 15 // Font size for the title
-                    },
-                    padding: {
-                        bottom: 3
+                ]
+            },
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Price Per Unit',
+                        font: {
+                            size: 15 // Font size for the title
+                        },
+                        padding: {
+                            bottom: 3
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
                     }
                 }
-            },
-            scales: {
-                x: {
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.9
-                },
-                y: {
-                    beginAtZero: true
-                }
             }
-        }
-    });
-}
+        });
+    }
 
 function populatePriceGraph() {
     var ctx = document.getElementById('Canvas-Main').getContext('2d');
@@ -138,86 +147,55 @@ function populatePriceGraph() {
                     font: {
                         size: 15 // Font size for the title
                     },
-                    padding: {
-                        bottom: 3
-                    }
-                }
+                ]
             },
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-function populateTariffGraph() {
-    var tar = document.getElementById('Canvas-Main').getContext('2d');
-
-    myChart = new Chart(tar, {
-        type: 'pie',
-        data: {
-            labels: ['CAD', 'USA', 'MEX'],
-            datasets: [
-                {
-                    label: '',
-                    data: [0.33, 0.55, 0.1],
-                    backgroundColor: [
-                        'red',
-                        'blue',
-                        'yellow'
-                    ],
-                    borderWidth: 1
+            options: {
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Tariff Percentage by Country',
+                        font: {
+                            size: 15 // Font size for the title
+                        },
+                        padding: {
+                            bottom: 3
+                        }
+                    }
                 },
-            ]
-        },
-        options: {
-            plugins: {
-                title: {
-                    display: true,
-                    text: 'Tariff Percentage by Country',
-                    font: {
-                        size: 15 // Font size for the title
+                scales: {
+                    x: {
+                        barPercentage: 0.8,
+                        categoryPercentage: 0.9
                     },
-                    padding: {
-                        bottom: 3
+                    legend: {
+                        position: 'top',
+                    },
+                    y: {
+                        beginAtZero: true
                     }
                 }
-            },
-            scales: {
-                x: {
-                    barPercentage: 0.8,
-                    categoryPercentage: 0.9
-                },
-                legend: {
-                    position: 'top',
-                },
-                y: {
-                    beginAtZero: true
-                }
             }
-        }
+        });
+    }
+
+    document.getElementById("Inventory").addEventListener('click', function () {
+        myChart.destroy();
+
+        populateInventoryGraph();
     });
-}
 
-document.getElementById("Inventory").addEventListener('click', function () {
-    myChart.destroy();
+    document.getElementById("Price").addEventListener('click', function () {
+        myChart.destroy();
 
-    populateInventoryGraph();
-});
+        populatePriceGraph();
+    });
 
-document.getElementById("Price").addEventListener('click', function () {
-    myChart.destroy();
+    document.getElementById("Tariff").addEventListener('click', function () {
+        myChart.destroy();
 
-    populatePriceGraph();
-});
+        populateTariffGraph();
+    });
 
-document.getElementById("Tariff").addEventListener('click', function () {
-    myChart.destroy();
-
-    populateTariffGraph();
-});
 
 window.onload = function () {
     for (let i = 0; i < 50; i++) {
@@ -226,7 +204,6 @@ window.onload = function () {
             console.log("called");
             document.getElementById("Alerts").innerHTML = '';
         }
-    }
 
     populatePriceGraph(); // For a default graph on load
 
