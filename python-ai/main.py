@@ -1,9 +1,8 @@
 import logging
-import yaml
-import requests
 from flask import Flask, request, jsonify
 from src.models.risk_assessment_model import RiskAssessment
 from src.data_preprocessing.text_preprocessor import TextPreprocessor
+import yaml
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -13,9 +12,6 @@ app = Flask(__name__)
 
 # Load the YAML configuration
 def load_config(filepath="/Users/sbalamoni/ChainVision/python-ai/config/config.yaml"):
-    """
-    Load configuration from a YAML file.
-    """
     try:
         with open(filepath, "r") as file:
             return yaml.safe_load(file)
@@ -29,86 +25,9 @@ risk_assessment = RiskAssessment(
     risk_keywords=config.get("risk_keywords", {}),
     critical_ingredients=config.get("critical_ingredients", {})
 )
+
+# Initialize preprocessor for text processing
 preprocessor = TextPreprocessor()
-
-# Fetching news articles from the API
-def fetch_news(api_url):
-    """
-    Fetch news articles from the specified API.
-    """
-    try:
-        response = requests.get(api_url)
-        response.raise_for_status()
-        return response.json()
-    except Exception as e:
-        logging.error(f"Error fetching news: {e}")
-        return {}
-
-def process_article(article, risk_assessment, preprocessor):
-    try:
-        title = article.get("title", "No Title Available")
-        content = preprocessor.preprocess(article.get("content", "No Content Available"))
-        logging.info(f"Processing article: {title}")
-        logging.info(f"Content: {content}")
-
-        # Risk analysis
-        risk_score = risk_assessment.assess_article(content)
-        risk_level = risk_assessment.get_risk_level(risk_score)
-
-        # Extract ingredients
-        ingredients = risk_assessment.extract_ingredients(content)
-        ingredients = ", ".join(ingredients) if ingredients else "None"
-        logging.info(f"Ingredients found: {ingredients}")
-
-        # Log article details
-        logging.info(f"Title: {title}")
-        logging.info(f"Link: {article.get('link', 'No Link')}")
-        logging.info(f"Risk Level: {risk_level}")
-        logging.info(f"Risk Score: {risk_score}")
-        logging.info(f"Ingredients: {ingredients}")
-        logging.info("-" * 50)
-
-        return {
-            "title": title,
-            "link": article.get("link", "No Link"),
-            "risk_level": risk_level,
-            "risk_score": risk_score,
-            "ingredients": ingredients
-        }
-
-    except Exception as e:
-        logging.error(f"Error processing article: {e}")
-        return None
-    """
-    Processes a single article and returns the result.
-    """
-    try:
-        title = article.get("title", "No Title Available")
-        content = preprocessor.preprocess(article.get("content", "No Content Available"))
-        logging.info(f"Processing article: {title}")
-        logging.info(f"Content: {content}")
-
-        # Risk analysis
-        risk_score = risk_assessment.assess_article(content)
-        risk_level = risk_assessment.get_risk_level(risk_score)
-
-        # Extract ingredients
-        ingredients = risk_assessment.extract_ingredients(content)
-        ingredients = ", ".join(ingredients) if ingredients else "None"
-        logging.info(f"Ingredients found: {ingredients}")
-
-        return {
-            "title": title,
-            "link": article.get("link", "No Link"),
-            "risk_score": risk_score,
-            "risk_level": risk_level,
-            "ingredients": ingredients
-        }
-
-    except Exception as e:
-        logging.error(f"Error processing article: {e}")
-        return None
-
 
 @app.route('/api/v1/risk-assessment', methods=['POST'])
 def risk_assessment_endpoint():
@@ -126,43 +45,55 @@ def risk_assessment_endpoint():
         risk_score = risk_assessment.assess_article(content)
         risk_level = risk_assessment.get_risk_level(risk_score)
         ingredients = risk_assessment.extract_ingredients(content)
+        cost_increase = risk_assessment.predict_cost_increase(content)
 
         # Return response
         return jsonify({
             "content": content,
             "risk_score": risk_score,
             "risk_level": risk_level,
-            "ingredients": ingredients
+            "ingredients": ingredients,
+            "cost_increase": cost_increase  # Include predicted cost increase in response
+        }), 200
+
+    except Exception as e:
+        logging.error(f"Error in risk assessment: {e}")
+        return jsonify({"error": str(e)}), 500
+    """
+    REST API endpoint for assessing risk in articles and predicting cost increase risk.
+    """
+    try:
+        # Parse input JSON
+        data = request.get_json()
+        if not data or 'content' not in data:
+            return jsonify({"error": "Missing 'content' field in request"}), 400
+        
+        content = data['content']
+        
+        # Process content with risk assessment model
+        risk_score = risk_assessment.assess_article(content)
+        risk_level = risk_assessment.get_risk_level(risk_score)
+        ingredients = risk_assessment.extract_ingredients(content)
+
+        # Predict cost increase risk (you can modify this logic based on the ML model)
+        cost_increase_score = risk_assessment.predict_cost_increase(content)
+        cost_increase_level = "High" if cost_increase_score >= 7 else "Low"  # Simplified logic, use ML model
+
+        # Return response with both delay and cost increase predictions
+        return jsonify({
+            "content": content,
+            "risk_score": risk_score,
+            "risk_level": risk_level,
+            "ingredients": ingredients,
+            "cost_increase": {
+                "risk_score": cost_increase_score,
+                "risk_level": cost_increase_level
+            }
         }), 200
 
     except Exception as e:
         logging.error(f"Error in risk assessment: {e}")
         return jsonify({"error": str(e)}), 500
 
-@app.route('/api/v1/news', methods=['POST'])
-def batch_process_news():
-    """
-    Batch processing endpoint for multiple articles.
-    """
-    try:
-        # Parse input JSON
-        data = request.get_json()
-        if not data or 'articles' not in data:
-            return jsonify({"error": "Missing 'articles' field in request"}), 400
-        
-        articles = data['articles']
-        results = []
-
-        for article in articles:
-            result = process_article(article, risk_assessment, preprocessor)
-            if result:
-                results.append(result)
-
-        return jsonify({"status": "success", "results": results}), 200
-
-    except Exception as e:
-        logging.error(f"Error in batch processing: {e}")
-        return jsonify({"error": str(e)}), 500
-
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)  # You can specify a different port if 5000 is in use
+    app.run(debug=True)
