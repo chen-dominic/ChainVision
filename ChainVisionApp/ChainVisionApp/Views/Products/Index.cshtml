@@ -1,0 +1,282 @@
+﻿@model IEnumerable<ChainVisionApp.Models.ProductViewModel>
+@{
+    ViewData["Title"] = "Products";
+}
+
+<div class="container-fluid">
+
+    <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addProductModalLabel">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addProductForm">
+                        <div class="mb-3">
+                            <label for="imageUrl" class="form-label">Image URL</label>
+                            <input type="url" class="form-control" id="imageUrl" placeholder="Enter Image URL">
+                            <div class="mt-2" id="imagePreview" style="display: none;">
+                                <img src="" alt="Image Preview" class="img-thumbnail" style="max-width: 100%;">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="productName" class="form-label">Product Name</label>
+                            <input type="text" class="form-control" id="productName" placeholder="Enter Product Name">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ingredients" class="form-label">Ingredients</label>
+                            <textarea class="form-control" id="ingredients" rows="3" placeholder="Enter Ingredients, separated by commas"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="saveProductBtn">Save Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="messageContainer" style="display: none;"></div>
+
+    <div class="title">Products</div>
+    <div class="search-add form-control">
+        <input placeholder="Search Product..." class="search" id="searchInput" />
+        <button class="add-btn">
+            <i class="fa-solid fa-plus"></i>
+        </button>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 g-4" id="productsContainer">
+        @foreach (var product in Model)
+        {
+            <div class="col product-card" data-name="@product.ProductName">
+                <a href="@Url.Action("Details", "Products", new { id = product.Id })" class="text-decoration-none">
+                    <div class="card custom-card">
+                        <img src="@product.ImageUrl" class="card-img-top custom-img" alt="@product.ProductName" />
+                        <div class="card-body border-top">
+                            <h5 class="card-title">@product.ProductName</h5>
+                            <p class="card-text">Ingredients: @product.Ingredients</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#searchInput').on('input', function () {
+            const query = $(this).val();
+            $.ajax({
+                url: '/Products/Search', // URL of the search endpoint
+                type: 'GET',
+                data: { query: query },
+                success: function (data) {
+                    $('#productsContainer').empty();
+
+                    // Add filtered products
+                    data.forEach(product => {
+                        const productHtml = `
+                            <div class="col product-card" data-name="${product.productName}">
+                                <a href="/Products/Details/${product.id}" class="text-decoration-none">
+                                    <div class="card custom-card">
+                                        <img src="${product.imageUrl}" class="card-img-top custom-img" alt="${product.productName}" />
+                                        <div class="card-body border-top">
+                                            <h5 class="card-title">${product.productName}</h5>
+                                            <p class="card-text">Ingredients: ${product.ingredients}</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>`;
+                        $('#productsContainer').append(productHtml);
+                    });
+                },
+
+                error: function () {
+                    console.error('Failed to fetch products');
+                }
+            });
+        });
+    });
+
+    $(document).ready(function () {
+        // Open modal
+        $('.add-btn').on('click', function () {
+            $('#addProductModal').modal('show');
+        });
+
+        // Image preview
+        $('#imageUrl').on('input', function () {
+            const url = $(this).val();
+            if (url) {
+                $('#imagePreview img').attr('src', url);
+                $('#imagePreview').show();
+            } else {
+                $('#imagePreview').hide();
+            }
+        });
+
+        // Save product
+        $('#saveProductBtn').on('click', function () {
+            const imageUrl = $('#imageUrl').val();
+            const productName = $('#productName').val();
+            const ingredients = $('#ingredients').val();
+
+            if (imageUrl && productName && ingredients) {
+                const newProduct = {
+                    ImageUrl: imageUrl,
+                    ProductName: productName,
+                    Ingredients: ingredients
+                };
+
+                $.ajax({
+                    url: '/Products/AddProduct',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(newProduct),
+                    success: function (response) {
+                        // Check the status from the response
+                        if (response.status) {
+                            // Success case: Product added successfully
+                            const productHtml = `
+                <div class="col product-card" data-name="${newProduct.ProductName}">
+                    <div class="card custom-card">
+                        <img src="${newProduct.ImageUrl}" class="card-img-top custom-img" alt="${newProduct.ProductName}" />
+                        <div class="card-body border-top">
+                            <h5 class="card-title">${newProduct.ProductName}</h5>
+                            <p class="card-text">Ingredients: ${newProduct.Ingredients}</p>
+                        </div>
+                    </div>
+                </div>`;
+                            $('#productsContainer').append(productHtml);
+
+                            // Close the modal and reset the form
+                            $('#addProductModal').modal('hide');
+                            $('#addProductForm')[0].reset();
+                            $('#imagePreview').hide();
+
+                            // Display success message in the UI
+                            $('#messageContainer').html(`<div class="alert alert-success">${response.message}</div>`).show();
+                        } else {
+                            // Failure case: Show error message
+                            $('#addProductModal').modal('hide');
+                            $('#messageContainer').html(`<div class="alert alert-danger">${response.message}</div>`).show();
+                        }
+                    },
+                    error: function () {
+                        // General error when the API call fails
+                        $('#addProductModal').modal('hide');
+                        $('#messageContainer').html(`<div class="alert alert-danger">Failed to add product.</div>`).show();
+                    }
+                });
+
+            } else {
+                alert('Please fill out all fields.');
+            }
+        });
+    });
+
+</script>
+
+
+<style>
+    body {
+        background-color: white;
+        font-family: "Poppins", sans-serif;
+    }
+
+    .search-add {
+        display: flex;
+        justify-content: space-between;
+        margin: 2rem 0;
+    }
+
+    .search {
+        width: 50vw;
+        padding: 2px 10px;
+        border-radius: 15px;
+        border: 1px solid black;
+    }
+
+        .search:focus {
+            outline: none;
+        }
+
+    .add-btn {
+        background-color: #7ac142;
+        height: 40px;
+        width: 40px;
+        border-radius: 50%;
+        border: none;
+        color: white;
+        transition: all .2s ease-in-out;
+    }
+
+        .add-btn:hover {
+            background-color: #588f2c;
+        }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+    }
+
+    .custom-card {
+        height: 20rem;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all .3s ease-in-out;
+        cursor: pointer;
+        color: black;
+    }
+
+    .custom-card:hover {
+        transform: scale(1.02);
+    }
+
+    .custom-card:hover .card-body {
+        background-color: #dfe0de;
+    }
+
+    .custom-img {
+        width: 100%;
+        height: 12rem;
+        object-fit: cover;
+        background-color: #f8f9fa;
+        padding: 0;
+    }
+
+    .card-body {
+        text-align: center;
+        padding: 0.5rem;
+        transition: all .3s ease-in-out;
+    }
+
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .card-text {
+        text-align: left;
+        font-size: 0.8rem;
+    }
+    #imagePreview img {
+        max-width: 100%;
+        max-height: 150px;
+        margin-top: 10px;
+    }
+
+</style>

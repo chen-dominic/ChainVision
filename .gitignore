@@ -1,0 +1,16 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/ChainVisionApp/.vs
+/ChainVisionApp/ChainVisionApp/bin/
+/ChainVisionApp/ChainVisionApp/obj/
+*.user
+/.vs
+/ChainVisionApp/DataScrapeConsoleApp/bin/
+/ChainVisionApp/DataScrapeConsoleApp/obj/
+/ChainVisionApp/NewsContentPopulator/bin/
+/ChainVisionApp/NewsContentPopulator/obj/
+/ChainVisionApp/ChainVision.Data/bin/Debug/net6.0
+/ChainVisionApp/ChainVision.Data/obj
+**/Properties/launchSettings.json

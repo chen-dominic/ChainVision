@@ -1,0 +1,42 @@
+﻿@model ChainVisionApp.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "ChainVision";
+}
+@foreach(var e in Model.SugarData)
+{
+    <p>@e.Sugar</p>
+}
+
+
+<div class="containerMain">
+        <div id="columnOne" class="columns-vertical">
+            <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-4">
+                <h1 class="Title">Dashboard</h1>                    
+                <div id="Canvas-box" class="box" >
+                    <canvas id="Canvas-Main"></canvas>
+                </div>
+            </div>
+            <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
+                <button id="Price" class="Graph-Switch">Price</button>
+                <button id="Inventory" class="Graph-Switch">Live Inventory</button>
+                <button id="Tariff" class="Graph-Switch">Tariffs</button>
+            </div>
+        </div>
+        <div id="columnTwo" class="columns-vertical">
+            <h2>Alerts</h2>
+                <ul id="Alerts">
+                
+                </ul>
+        </div>
+    </div>
+</div>
+<footer>
+    <div>
+        Last Updated: 11/12/2024 19:34
+    </div>
+</footer>
+
+<script>
+    
+
+</script>

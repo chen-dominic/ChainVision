@@ -1,0 +1,66 @@
+# Ignore build output
+/bin/
+/obj/
+
+# User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+# Windows Installer files
+*.cab
+*.msi
+*.msm
+*.msp
+
+# Windows Installer files - Deployment
+AppPackages/
+PackageTmp/
+
+# Ignore temporary files
+*~.nib
+*~.swp
+*.log
+
+# JetBrains Rider
+.idea/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# .NET Core build directories
+.vs2019/
+.vs2017/
+
+# Ignore sensitive files
+appsettings.Development.json
+appsettings.Staging.json
+appsettings.Production.json
+
+# Ignore database files
+*.mdf
+*.ldf
+
+# User-specific settings for Visual Studio Code
+.vscode/
+
+# Ignore build results for .NET Core projects
+project.lock.json
+project.fragment.lock.json
+
+# Ignore package restore directories
+node_modules/
+
+# Ignore NPM and Yarn files
+yarn.lock
+package-lock.json
+
+# Ignore configuration files for CI/CD systems
+*.yml
+*.yaml
+
+.vs/
+/bin/
+/obj/
+

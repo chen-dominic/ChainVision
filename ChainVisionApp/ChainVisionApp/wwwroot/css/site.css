@@ -1,0 +1,128 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.box {
+    border-radius: 8px;
+    width: 2px;
+    margin: 12px;
+    transition: transform 0.3s ease;
+}
+
+.box:hover {
+    /* transform: scale(1.13) 
+    border: 2px solid black;
+    */
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    padding-top: 2%;
+}
+
+body {
+    background-color: white;
+    font-family: "Poppins", sans-serif;
+}
+
+.title {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 700;
+    margin-top: 1.3rem;
+}
+
+.subtitle {
+    text-align: left;
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.back-btn {
+    font-size: 3rem;
+    color: #7ac142;
+    transition: all .2s ease-in-out;
+    position: absolute;
+    top: 30px;
+    left: 330px;
+}
+
+.back-btn:hover {
+    transform: scale(1.02);
+    color: #86cf4c;
+}
+
+.Graph-Switch {
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.containerMain {
+    display: flex;
+    width: 100%;
+}
+
+.columns-vertical {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    max-height: 600px;
+}
+
+#columnTwo {
+    width: 100%;
+    max-width: 300px;
+}
+
+#columnOne {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    max-height: 600px;
+}
+
+#Canvas-box {
+    width: 800px;
+    height: auto;
+}
+
+canvas {
+    width: 100%; 
+    height: auto; 
+    max-height: 500px; 
+    aspect-ratio: 16 / 9; 
+}
+
+h2 {
+    align-items: center;
+    text-align: center;
+}
