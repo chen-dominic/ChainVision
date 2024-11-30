@@ -1,2 +1,180 @@
-﻿// See https://aka.ms/new-console-template for more information
-Console.WriteLine("Hello, World!");
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using ChainVision.Data;
+using ChainVision.Data.Models;
+using Newtonsoft.Json;
+using System.Text;
+using System.Text.RegularExpressions;
+using Microsoft.Extensions.Configuration;
+
+class Program
+{
+    static async Task Main(string[] args)
+    {
+        var services = new ServiceCollection();
+        services.AddDbContext<ChainVisionContext>(options =>
+            options.UseSqlServer("Server=1235dc-sqldev;Database=ChainVision;Integrated Security=True;Encrypt=True;TrustServerCertificate=True"));
+
+        var serviceProvider = services.BuildServiceProvider();
+        var dbContext = serviceProvider.GetService<ChainVisionContext>();
+        Timer timer = new Timer(async _ =>
+        {
+            await RunJobAsync(dbContext);
+        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+
+        // Keep the application running
+        await Task.Delay(Timeout.Infinite);
+    }
+
+    static async Task RunJobAsync(ChainVisionContext dbContext)
+    {
+        try
+        {
+            var articlesData = await GenerateNewsData(dbContext);
+
+            foreach (var article in articlesData)
+            {
+                // 2. Process the article through your Python AI model (Flask API)
+                var processedArticle = await ProcessNewsData(article);
+
+                // 3. populate database with news data and disruption tables
+
+                await dbContext.SaveChangesAsync();
+                Console.WriteLine($"Inserted news: {article.Title}");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error running job: {ex.Message}");
+        }
+    }
+
+    static async Task<List<NewsArticle>> GenerateNewsData(ChainVisionContext dbContext)
+    {
+        Console.WriteLine("Starting Generation...");
+
+        var openAiApiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
+
+        if (string.IsNullOrEmpty(openAiApiKey))
+        {
+            throw new Exception("OpenAI API key not found in environment variables.");
+        }
+
+        Console.WriteLine($"OPEN AI KEY: {openAiApiKey}");
+        Console.WriteLine("---------------------------------");
+
+        using (var client = new HttpClient())
+        {
+            string existingArticleIds = $"( {string.Join(",", dbContext.News.Select(_ => _.ArticleId).ToList())} )";
+            string ingredientsList = $"( {string.Join(", ", dbContext.Materials.Select(_ => _.MaterialName).ToList())} )";
+
+            string jsonFormatText = "{" +
+                $"Article_Id (string, unique from {existingArticleIds})," +
+                $"Title (string, title of article)," +
+                $"Link (string, URL of article)," +
+                $"Keywords (string[], array of keywords related to supply chain)," +
+                $"Description (string, general summary of article, 1-2 sentences)," +
+                $"Content (string, full article body)," +
+                $"PubDate (DateTime, article published date)," +
+                $"Country (string[], array of countries related to article)" +
+                "}";
+
+            string generatorQuery =
+                $"Generate 3 news articles in the form of a list of this JSON: {jsonFormatText}. Make it related to supply chain, " +
+                $"with varying severity, and (optional) to be related to this ingredient list {ingredientsList}. ";
+
+            Console.WriteLine($"Generator Query: {generatorQuery}");
+
+            var requestBody = new
+            {
+                model = "gpt-3.5-turbo",
+                messages = new[]
+                {
+                new { role = "system", content = "You are a powerful news API generating news articles." },
+                new { role = "user", content = generatorQuery }
+            },
+                max_tokens = 3000, // Adjust token limit as needed
+                temperature = 0.7 // Adjust creativity
+            };
+
+            var content = new StringContent(JsonConvert.SerializeObject(requestBody), Encoding.UTF8, "application/json");
+
+            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {openAiApiKey}");
+
+            var response = await client.PostAsync("https://api.openai.com/v1/chat/completions", content);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                string errorResponse = await response.Content.ReadAsStringAsync();
+                throw new Exception($"OpenAI API call failed: {errorResponse}");
+            }
+
+            // Parse the OpenAI response
+            var openAiResponse = JsonConvert.DeserializeObject<dynamic>(await response.Content.ReadAsStringAsync());
+            Console.WriteLine($"Raw OpenAI Response: {openAiResponse}");
+
+            string generatedText = openAiResponse?.choices[0]?.message?.content;
+
+            if (string.IsNullOrEmpty(generatedText))
+            {
+                throw new Exception("No response generated by OpenAI.");
+            }
+
+            string cleanedText = Regex.Replace(generatedText, @"^\d+\.\s*", "", RegexOptions.Multiline); // Remove numeric prefixes
+            Console.WriteLine($"Cleaned Generated Text: {cleanedText}");
+
+            if (!cleanedText.Trim().StartsWith("["))
+            {
+                cleanedText = $"[{cleanedText}]";
+            }
+
+            List<NewsArticle> articles;
+            try
+            {
+                articles = JsonConvert.DeserializeObject<List<NewsArticle>>(cleanedText);
+            }
+            catch (JsonException ex)
+            {
+                throw new Exception($"Failed to deserialize articles: {ex.Message}. Raw response: {cleanedText}");
+            }
+
+            return articles;
+        }
+    }
+
+    static async Task<ProccessedData> ProcessNewsData(NewsArticle article)
+    {
+        using (var client = new HttpClient())
+        {
+            var content = new StringContent(JsonConvert.SerializeObject(article), Encoding.UTF8, "application/json");
+
+            // Call your Python Flask AI model API
+            var response = await client.PostAsync("http://your-flask-api-endpoint.com/process-article", content);
+            response.EnsureSuccessStatusCode();
+
+            // Deserialize the processed article data
+            var processedData = JsonConvert.DeserializeObject<ProccessedData>(await response.Content.ReadAsStringAsync());
+            return processedData;
+        }
+    }
+
+    public class NewsArticle
+    {
+        public string Article_Id { get; set; }
+        public string Title { get; set; }
+        public string Link { get; set; }
+        public string[] Keywords { get; set; }
+        public string Description { get; set; }
+        public string Content { get; set; }
+        public DateTime PubDate { get; set; }
+        public string[] Country { get; set; }
+        public string Sentitment { get; set; }
+    }
+
+    public class ProccessedData
+    {
+        public string[] Ingredients { get; set; }
+        public string Risk_Level { get; set; }
+        public int Risk_Score { get; set; }
+    }
+}

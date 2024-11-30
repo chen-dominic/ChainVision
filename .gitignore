@@ -11,3 +11,6 @@
 /ChainVisionApp/DataScrapeConsoleApp/obj/
 /ChainVisionApp/NewsContentPopulator/bin/
 /ChainVisionApp/NewsContentPopulator/obj/
+/ChainVisionApp/ChainVision.Data/bin/Debug/net6.0
+/ChainVisionApp/ChainVision.Data/obj
+**/Properties/launchSettings.json
