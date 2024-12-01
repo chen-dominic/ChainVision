@@ -38,6 +38,45 @@ class Program
                 var processedArticle = await ProcessNewsData(article);
 
                 // 3. populate database with news data and disruption tables
+                var newsDb = new News
+                {
+                    ArticleId = article.Article_Id,
+                    Title = article.Title,
+                    DisplayText = article.Description,
+                    Description = article.Content,
+                    SeverityRatingId = (byte?)processedArticle.Risk_Score,
+                    PublishedDateUtc = article.PubDate,
+                    Country = string.Join(", ", article.Country),
+                    ArticleUrl = article.Link
+                };
+                dbContext.News.Add(newsDb);
+                await dbContext.SaveChangesAsync();
+                var newsId = dbContext.News.Where(_ => _.ArticleId ==  article.Article_Id).Select(_ => _.Id).FirstOrDefault();
+
+                var materials = processedArticle.Ingredients;
+                foreach(var material in materials)
+                {
+                    var matId = dbContext.Materials.Where(_ => _.MaterialName == material).Select(_ => _.Id).FirstOrDefault();
+                    if(matId == null)
+                    {
+                        var newMat = new Material
+                        {
+                            MaterialName = material
+                        };
+                        dbContext.Materials.Add(newMat);
+                        await dbContext.SaveChangesAsync();
+                        matId = dbContext.Materials.Where(_ => _.MaterialName == material).Select(_ => _.Id).FirstOrDefault();
+                    }
+                    var matDisrupt = new MaterialDisruption
+                    {
+                        MaterialId = matId,
+                        NewsId = newsId,
+                    };
+                    dbContext.MaterialDisruptions.Add(matDisrupt);
+                }
+
+                var currentTime = DateTime.UtcNow;
+                dbContext.UpdatedTimes.Add(new UpdatedTime { LastUpdatedTimeUtc = currentTime });
 
                 await dbContext.SaveChangesAsync();
                 Console.WriteLine($"Inserted news: {article.Title}");
@@ -62,14 +101,14 @@ class Program
 
         Console.WriteLine($"OPEN AI KEY: {openAiApiKey}");
         Console.WriteLine("---------------------------------");
-
+            
         using (var client = new HttpClient())
         {
             string existingArticleIds = $"( {string.Join(",", dbContext.News.Select(_ => _.ArticleId).ToList())} )";
             string ingredientsList = $"( {string.Join(", ", dbContext.Materials.Select(_ => _.MaterialName).ToList())} )";
 
             string jsonFormatText = "{" +
-                $"Article_Id (string, unique from {existingArticleIds})," +
+                $"Article_Id (string, different from any of these: {existingArticleIds})," +
                 $"Title (string, title of article)," +
                 $"Link (string, URL of article)," +
                 $"Keywords (string[], array of keywords related to supply chain)," +
@@ -121,7 +160,6 @@ class Program
             }
 
             string cleanedText = Regex.Replace(generatedText, @"^\d+\.\s*", "", RegexOptions.Multiline); // Remove numeric prefixes
-            Console.WriteLine($"Cleaned Generated Text: {cleanedText}");
 
             if (!cleanedText.Trim().StartsWith("["))
             {
@@ -138,6 +176,7 @@ class Program
                 throw new Exception($"Failed to deserialize articles: {ex.Message}. Raw response: {cleanedText}");
             }
 
+            Console.WriteLine($"Cleaned Generated Text: {articles.ToString()}");
             return articles;
         }
     }
