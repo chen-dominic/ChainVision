@@ -4,35 +4,40 @@
 
 // Write your JavaScript code.
 var myChart;
-let myArray = [];
+var sugar; // To store each global instance of the data on start up
+var wheat;
+var cocoa;
+var springWheat;
 
 window.onload = function () {
         populateAlerts(); // TODO put data here
             //console.log("called");
             //document.getElementById("Alerts").innerHTML = '';
-        extractPreviousData()
-    populatePriceGraph();
+    sugar = extractPreviousData(SugarData);
+    wheat = extractPreviousData(WheatData);
+    cocoa = extractPreviousData(CocoaData);
+    springWheat = extractPreviousData(SpringWheatData);
 
+    populatePriceGraph();
 }
 
-function extractPreviousData() {
-    const prev = window.SugarData.map(item => item.previous);
+function extractPreviousData(ingredient) {
+    let myArray = [];
+    const prev = ingredient.map(item => item.previous);
     var previousData = prev;
-    console.log("Data for Previous Column: " + previousData);
 
     var dataSetPrevious = Object.keys(previousData).map(key => ({
         label: key,
         data: previousData[key],
     }));
 
-    console.log("Data from function", dataSetPrevious);
-
     dataSetPrevious.forEach(function (data) {
         myArray = myArray.concat(data.data);
     });
 
     myArray = myArray.map(item => parseFloat(item));
-
+    console.log("Data from function: " + myArray);
+    return myArray;
 }
 
 function populateAlerts() {
@@ -70,8 +75,6 @@ function timer() {
         populateAlerts(counter);
     }, 60000); // Every minute
 }
-
-
 
 function populateInventoryGraph() {
     if (myChart) {
@@ -161,13 +164,37 @@ function populatePriceGraph() {
         data: {
             labels: ['Mar 25', 'May 25', 'Jul 25', 'Oct 25', 'Mar 26', 'May 26'],
             datasets: [{
-                label: 'Sugar',
-                data: myArray,  
+                label: 'Cocoa', // For Cocoa
+                data: cocoa,  
                 backgroundColor: 'brown',
                 borderColor: 'brown',
                 borderWidth: 4,
                 borderRadius: 5,
             },
+            {
+                label: 'Wheat', // For Wheat
+                data: wheat,  
+                backgroundColor: 'black',
+                borderColor: 'black',
+                borderWidth: 4,
+                borderRadius: 5,
+            },
+            {
+                label: 'Sugar', // For sugar
+                data: sugar,  
+                backgroundColor: 'blue',
+                borderColor: 'blue',
+                borderWidth: 4,
+                borderRadius: 5,
+            },
+            {
+                label: 'Spring Wheat', // For sugar
+                data: springWheat,  
+                backgroundColor: 'purple',
+                borderColor: 'purple',
+                borderWidth: 4,
+                borderRadius: 5,
+            }
         ]
         },
         options: {
@@ -218,7 +245,6 @@ function populatePriceGraph() {
             }
         }
     });
-
 }
 
 function populateTariffGraph() {

@@ -37,10 +37,11 @@
 </footer>
 
 <script type="text/javascript">
-    console.log("Razor Data", @Html.Raw(sugarDataJson));
+    console.log("Sugar Razor Data", @Html.Raw(sugarDataJson));
     window.SugarData = JSON.parse('@Html.Raw(sugarDataJson)');
     window.WheatData = JSON.parse('@Html.Raw(wheatDataJson)');
     window.CocoaData = JSON.parse('@Html.Raw(cocoaDataJson)');
+    console.log("Cocoa Razor Data", @Html.Raw(cocoaDataJson));
     window.SpringWheatData = JSON.parse('@Html.Raw(springwheatDataJson)');
     window.alerts = JSON.parse('@Html.Raw(alerts)');
 </script>
