@@ -1,12 +1,12 @@
 ﻿@model ChainVisionApp.Models.DashboardViewModel
 @{
     ViewData["Title"] = "ChainVision";
+    var sugarDataJson = Json.Serialize(Model.SugarData);
+    var wheatDataJson = Json.Serialize(Model.WheatData);
+    var cocoaDataJson = Json.Serialize(Model.CocoaData);
+    var springwheatDataJson = Json.Serialize(Model.SpringWheatData);
+    var alerts = Json.Serialize(Model.AlertNewsData);
 }
-@foreach(var e in Model.SugarData)
-{
-    <p>@e.Sugar</p>
-}
-
 
 <div class="containerMain">
         <div id="columnOne" class="columns-vertical">
@@ -25,7 +25,7 @@
         <div id="columnTwo" class="columns-vertical">
             <h2>Alerts</h2>
                 <ul id="Alerts">
-                
+                    <li>No current alerts</li>
                 </ul>
         </div>
     </div>
@@ -36,7 +36,12 @@
     </div>
 </footer>
 
-<script>
-    
-
+<script type="text/javascript">
+    console.log("Razor Data", @Html.Raw(sugarDataJson));
+    window.SugarData = JSON.parse('@Html.Raw(sugarDataJson)');
+    window.WheatData = JSON.parse('@Html.Raw(wheatDataJson)');
+    window.CocoaData = JSON.parse('@Html.Raw(cocoaDataJson)');
+    window.SpringWheatData = JSON.parse('@Html.Raw(springwheatDataJson)');
+    window.alerts = JSON.parse('@Html.Raw(alerts)');
 </script>
+<script type="text/javascript" src="~/js/HomePage.js"></script>
