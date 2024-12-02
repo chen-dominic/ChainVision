@@ -130,7 +130,7 @@ class Program
                 $"Keywords (string[], array of keywords related to supply chain)," +
                 $"Description (string, general summary of article, 1-2 sentences)," +
                 $"Content (string, full article body)," +
-                $"PubDate (DateTime, article published date)," +
+                $"PubDate (DateTime, article published date, must be after 12-02-2024 to 12-04-2024)," +
                 $"Country (string[], array of countries related to article)" +
                 "}";
 
@@ -231,14 +231,15 @@ class Program
             {
                 processedData.risk_score = 1;
             }
-            else if(risk < 5){
+            else if(risk < 6)
+            {
                 processedData.risk_score = 2;
             }
-            else if(risk < 7)
+            else if(risk < 9)
             {
                 processedData.risk_score = 3;
             }
-            else if (risk < 10)
+            else if (risk < 12)
             {
                 processedData.risk_score = 4;
             }

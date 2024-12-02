@@ -1,5 +1,5 @@
 ﻿using ChainVisionApp.Models;
-using ChainVisionApp.Models.Data;
+using ChainVision.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.IO.Pipes;
