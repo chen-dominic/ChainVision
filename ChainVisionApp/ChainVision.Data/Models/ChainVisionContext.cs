@@ -22,6 +22,7 @@ namespace ChainVision.Data.Models
         public virtual DbSet<IngredientsDataWheat> IngredientsDataWheats { get; set; } = null!;
         public virtual DbSet<Material> Materials { get; set; } = null!;
         public virtual DbSet<MaterialDisruption> MaterialDisruptions { get; set; } = null!;
+        public virtual DbSet<MaterialInventory> MaterialInventories { get; set; } = null!;
         public virtual DbSet<News> News { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
         public virtual DbSet<ProductDisruption> ProductDisruptions { get; set; } = null!;
@@ -54,6 +55,8 @@ namespace ChainVision.Data.Models
 
                 entity.Property(e => e.Last).HasMaxLength(50);
 
+                entity.Property(e => e.Previous).HasColumnType("decimal(18, 10)");
+
                 entity.Property(e => e.Time).HasColumnType("date");
             });
 
@@ -64,6 +67,8 @@ namespace ChainVision.Data.Models
                 entity.ToTable("Ingredients_Data_Spring_Wheat");
 
                 entity.Property(e => e.Last).HasMaxLength(50);
+
+                entity.Property(e => e.Previous).HasColumnType("decimal(18, 10)");
 
                 entity.Property(e => e.SpringWheat)
                     .HasMaxLength(50)
@@ -78,7 +83,13 @@ namespace ChainVision.Data.Models
 
                 entity.ToTable("Ingredients_DataSugar");
 
+                entity.Property(e => e.Change).HasColumnType("decimal(18, 10)");
+
                 entity.Property(e => e.Last).HasMaxLength(50);
+
+                entity.Property(e => e.Low).HasColumnType("decimal(18, 10)");
+
+                entity.Property(e => e.Previous).HasColumnType("decimal(18, 10)");
 
                 entity.Property(e => e.Sugar).HasMaxLength(50);
 
@@ -93,6 +104,8 @@ namespace ChainVision.Data.Models
 
                 entity.Property(e => e.Last).HasMaxLength(50);
 
+                entity.Property(e => e.Previous).HasColumnType("decimal(18, 10)");
+
                 entity.Property(e => e.Time).HasColumnType("date");
 
                 entity.Property(e => e.Wheat).HasMaxLength(50);
@@ -105,9 +118,18 @@ namespace ChainVision.Data.Models
 
             modelBuilder.Entity<MaterialDisruption>(entity =>
             {
+                entity.ToTable("MaterialDisruption");
+            });
+
+            modelBuilder.Entity<MaterialInventory>(entity =>
+            {
                 entity.HasNoKey();
 
-                entity.ToTable("MaterialDisruption");
+                entity.ToTable("MaterialInventory");
+
+                entity.Property(e => e.Ingredient).HasMaxLength(50);
+
+                entity.Property(e => e.InventoryMonth).HasColumnType("date");
             });
 
             modelBuilder.Entity<News>(entity =>
@@ -130,8 +152,6 @@ namespace ChainVision.Data.Models
 
             modelBuilder.Entity<ProductDisruption>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("ProductDisruption");
             });
 
@@ -149,8 +169,6 @@ namespace ChainVision.Data.Models
             modelBuilder.Entity<UpdatedTime>(entity =>
             {
                 entity.ToTable("UpdatedTime");
-
-                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.LastUpdatedTimeUtc)
                     .HasColumnType("datetime")

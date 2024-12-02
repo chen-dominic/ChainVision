@@ -5,6 +5,7 @@
 /ChainVisionApp/.vs
 /ChainVisionApp/ChainVisionApp/bin/
 /ChainVisionApp/ChainVisionApp/obj/
+
 *.user
 /.vs
 /ChainVisionApp/DataScrapeConsoleApp/bin/
@@ -14,3 +15,5 @@
 /ChainVisionApp/ChainVision.Data/bin/Debug/net6.0
 /ChainVisionApp/ChainVision.Data/obj
 **/Properties/launchSettings.json
+/ChainVisionApp/ChainVisionApp/Properties/launchSettings.json
+/python-ai

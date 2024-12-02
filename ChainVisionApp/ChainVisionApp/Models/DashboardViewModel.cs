@@ -1,4 +1,4 @@
-﻿using ChainVisionApp.Models.Data;
+﻿using ChainVision.Data.Models;
 
 namespace ChainVisionApp.Models
 {
@@ -9,5 +9,7 @@ namespace ChainVisionApp.Models
         public List<IngredientsDataSugar> SugarData { get; set; }
         public List<IngredientsDataWheat> WheatData { get; set; }
         public List<VwRecentHighSeverityNews> AlertNewsData { get; set; }
+        public DateTime? LatestUpdated { get; set; }
+        public List<MaterialInventory> Inventory { get; set; }
     }
 }

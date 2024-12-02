@@ -5,7 +5,7 @@ namespace ChainVision.Data.Models
 {
     public partial class UpdatedTime
     {
-        public int Id { get; set; }
         public DateTime? LastUpdatedTimeUtc { get; set; }
+        public int Id { get; set; }
     }
 }

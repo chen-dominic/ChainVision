@@ -1,4 +1,4 @@
-using ChainVisionApp.Models.Data;
+using ChainVision.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);

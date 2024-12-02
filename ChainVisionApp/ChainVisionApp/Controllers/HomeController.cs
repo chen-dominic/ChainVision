@@ -1,5 +1,5 @@
 ﻿using ChainVisionApp.Models;
-using ChainVisionApp.Models.Data;
+using ChainVision.Data.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -24,6 +24,9 @@ namespace ChainVisionApp.Controllers
             var wheatData = _cvContext.IngredientsDataWheats.ToList();
             var alertData = _cvContext.VwRecentHighSeverityNews.ToList();
 
+            var inventoryData = _cvContext.MaterialInventories.ToList();
+            var latestTime = _cvContext.UpdatedTimes.Select(_ => _.LastUpdatedTimeUtc).OrderByDescending(_ => _).First();
+
             var data = new DashboardViewModel
             {
                 CocoaData = cocoaData,
@@ -31,6 +34,8 @@ namespace ChainVisionApp.Controllers
                 SugarData = sugarData,
                 WheatData = wheatData,
                 AlertNewsData = alertData,
+                Inventory = inventoryData,
+                LatestUpdated = latestTime
             };
 
             return View(data);
