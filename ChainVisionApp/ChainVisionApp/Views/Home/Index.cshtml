@@ -6,6 +6,7 @@
     var cocoaDataJson = Json.Serialize(Model.CocoaData);
     var springwheatDataJson = Json.Serialize(Model.SpringWheatData);
     var alerts = Json.Serialize(Model.AlertNewsData);
+    var inventoryJson = Json.Serialize(Model.Inventory);
 }
 
 <div class="containerMain">
@@ -43,6 +44,10 @@
     window.CocoaData = JSON.parse('@Html.Raw(cocoaDataJson)');
     console.log("Cocoa Razor Data", @Html.Raw(cocoaDataJson));
     window.SpringWheatData = JSON.parse('@Html.Raw(springwheatDataJson)');
-    window.alerts = JSON.parse('@Html.Raw(alerts)');
+    console.log("Alert Razor Data", @Html.Raw(alerts));
+    window.alertData = JSON.parse('@Html.Raw(alerts)');
+    console.log("Inventory Razor Data", @Html.Raw(inventoryJson));
+    window.inventoryData = JSON.parse('@Html.Raw(inventoryJson)');
+
 </script>
 <script type="text/javascript" src="~/js/HomePage.js"></script>

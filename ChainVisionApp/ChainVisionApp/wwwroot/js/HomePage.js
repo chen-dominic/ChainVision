@@ -7,12 +7,18 @@ var myChart;
 var sugar; // To store each global instance of the data on start up
 var wheat;
 var cocoa;
+var alerts;
+var flour;
+var sugar;
+var milk;
+var butter;
 var springWheat;
+var myArray = [];
 
 window.onload = function () {
-        populateAlerts(); // TODO put data here
-            //console.log("called");
-            //document.getElementById("Alerts").innerHTML = '';
+    extractPreviousData(alertData);
+    console.log("Array here: " + myArray);
+    populateAlerts(); 
     sugar = extractPreviousData(SugarData);
     wheat = extractPreviousData(WheatData);
     cocoa = extractPreviousData(CocoaData);
@@ -22,9 +28,18 @@ window.onload = function () {
 }
 
 function extractPreviousData(ingredient) {
-    let myArray = [];
+    myArray = [];
+    
     const prev = ingredient.map(item => item.previous);
-    var previousData = prev;
+    const alert = ingredient.map(item => String(item.title));
+    console.log("Here are the alerts: " + alert);
+    var previousData;
+    if (ingredient == alertData) {
+        previousData = alert;
+        console.log("Making alert");
+    } else {
+        previousData = prev;
+    }
 
     var dataSetPrevious = Object.keys(previousData).map(key => ({
         label: key,
@@ -35,36 +50,20 @@ function extractPreviousData(ingredient) {
         myArray = myArray.concat(data.data);
     });
 
-    myArray = myArray.map(item => parseFloat(item));
+    myArray = myArray.filter(item => item !== null && item !== undefined);
     console.log("Data from function: " + myArray);
     return myArray;
 }
 
 function populateAlerts() {
-    //let alertItem = document.createElement('li');
-    //document.getElementById("Alerts").appendChild(alertItem);
-    /* /To implement when data is in the backend
-    console.log("Alerts: ", window.alert);
+    const alertList = document.getElementById("Alerts");
+    alertList.innerHTML = ''; 
 
-    const prev = window.alert.map(item => item.previous);
-    var previousData = prev;
-    console.log("Data for Previous Column: " + previousData);
-
-    var dataSetPrevious = Object.keys(previousData).map(key => ({
-        label: key,
-        data: previousData[key],
-    }));
-
-    console.log("Data from function", dataSetPrevious);
-
-    dataSetPrevious.forEach(function (data) {
-        myArray = myArray.concat(data.data);
+    myArray.forEach(alertMessage => {
+        let alertItem = document.createElement('li');
+        alertItem.textContent = alertMessage;
+        alertList.appendChild(alertItem);
     });
-
-    myArray = myArray.map(item => parseFloat(item));
-    
-    
-    */
 }
 
 function timer() {
@@ -88,7 +87,7 @@ function populateInventoryGraph() {
             labels: ['Mar 25','May 25','Jul 25','Oct 25','Mar 26','May 26'],
             datasets: [
                 {
-                    label: 'Coco',
+                    label: 'Flour',
                     data: [21.57, 20.27, 19.58, 39.42, 19.55, 18.54, 18.06],
                     backgroundColor: 'brown',
                     borderColor: 'brown',
@@ -164,7 +163,7 @@ function populatePriceGraph() {
         data: {
             labels: ['Mar 25', 'May 25', 'Jul 25', 'Oct 25', 'Mar 26', 'May 26'],
             datasets: [{
-                label: 'Cocoa', // For Cocoa
+                label: 'Cocoa', 
                 data: cocoa,  
                 backgroundColor: 'brown',
                 borderColor: 'brown',
@@ -172,7 +171,7 @@ function populatePriceGraph() {
                 borderRadius: 5,
             },
             {
-                label: 'Wheat', // For Wheat
+                label: 'Wheat', 
                 data: wheat,  
                 backgroundColor: 'black',
                 borderColor: 'black',
@@ -180,7 +179,7 @@ function populatePriceGraph() {
                 borderRadius: 5,
             },
             {
-                label: 'Sugar', // For sugar
+                label: 'Sugar', 
                 data: sugar,  
                 backgroundColor: 'blue',
                 borderColor: 'blue',
@@ -188,7 +187,7 @@ function populatePriceGraph() {
                 borderRadius: 5,
             },
             {
-                label: 'Spring Wheat', // For sugar
+                label: 'Spring Wheat',
                 data: springWheat,  
                 backgroundColor: 'purple',
                 borderColor: 'purple',
@@ -226,7 +225,7 @@ function populatePriceGraph() {
                     beginAtZero: true,
                     title: {
                         display: true,
-                        text: 'Price Per Unit ($)',
+                        text: 'Price Per Unit in cents',
                         font: {
                             size: 14
                         }
@@ -254,18 +253,16 @@ function populateTariffGraph() {
     var tar = document.getElementById('Canvas-Main').getContext('2d');
 
     myChart = new Chart(tar, {
-        type: 'pie',
+        type: 'line',
         data: {
-            labels: ['CAD', 'USA', 'MEX'],
+            labels: ['CAD', 'USA', 'MEX'], 
             datasets: [{
-                label: 'Tariff Distribution', // You can add a label if needed
-                data: [0.33, 0.55, 0.1],
-                backgroundColor: [
-                    'red',
-                    'blue',
-                    'yellow'
-                ],
-                borderWidth: 1
+                label: 'Tariff Distribution',
+                data: [0.33, 0.55, 0.1],  
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',  
+                borderColor: 'rgba(255, 99, 132, 1)',  
+                borderWidth: 1,
+                fill: true  
             }]
         },
         options: {
@@ -285,20 +282,58 @@ function populateTariffGraph() {
                     display: true,
                     text: 'Tariff Percentage by Country',
                     font: {
-                        size: 18
+                        size: 18,
+                        weight: 'bold'
                     },
+                    padding: {
+                        bottom: 20  
+                    }
                 }
             },
             layout: {
                 padding: {
-                    top: 10,
+                    top: 20,
                     right: 10,
-                    bottom: 10,
+                    bottom: 20,
                     left: 10
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Countries', 
+                        font: {
+                            size: 14
+                        }
+                    },
+                    grid: {
+                        display: true,  
+                        drawOnChartArea: false  
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Tariff Percentage',  
+                        font: {
+                            size: 14
+                        }
+                    },
+                    beginAtZero: true, 
+                    ticks: {
+                        stepSize: 0.1,  
+                        max: 1,  
+                        min: 0  
+                    },
+                    grid: {
+                        display: true  
+                    }
                 }
             }
         }
     });
+
 }
 
 
