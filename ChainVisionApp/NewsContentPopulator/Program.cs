@@ -20,7 +20,7 @@ class Program
         Timer timer = new Timer(async _ =>
         {
             await RunJobAsync(dbContext);
-        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(5));
+        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 
         // Keep the application running
         await Task.Delay(Timeout.Infinite);
@@ -34,30 +34,44 @@ class Program
 
             foreach (var article in articlesData)
             {
+                ProccessedData processedArticle;
                 // 2. Process the article through your Python AI model (Flask API)
-                var processedArticle = await ProcessNewsData(article);
-
-                // 3. populate database with news data and disruption tables
-                var newsDb = new News
+                try
                 {
-                    ArticleId = article.Article_Id,
-                    Title = article.Title,
-                    DisplayText = article.Description,
-                    Description = article.Content,
-                    SeverityRatingId = (byte?)processedArticle.Risk_Score,
-                    PublishedDateUtc = article.PubDate,
-                    Country = string.Join(", ", article.Country),
-                    ArticleUrl = article.Link
+                    processedArticle = await ProcessNewsData(article);
+                }
+                catch (Exception ex) {
+                    string[] ingredient = { "N/A" };
+                    processedArticle = new ProccessedData
+                    {
+                        risk_score = 6,
+                        ingredients = ingredient,
+                        risk_level = "Unknown"
+                    };
+                }
+
+                    // 3. populate database with news data and disruption tables
+                    var newsDb = new News
+                {
+                    ArticleId = article.article_id,
+                    Title = article.title,
+                    DisplayText = article.description,
+                    Description = article.content,
+                    SeverityRatingId = (byte?)processedArticle.risk_score,
+                    PublishedDateUtc = article.pubDate,
+                    Country = string.Join(", ", article.country),
+                    ArticleUrl = article.link
                 };
                 dbContext.News.Add(newsDb);
                 await dbContext.SaveChangesAsync();
-                var newsId = dbContext.News.Where(_ => _.ArticleId ==  article.Article_Id).Select(_ => _.Id).FirstOrDefault();
+                var newsId = dbContext.News.Where(_ => _.ArticleId ==  article.article_id).Select(_ => _.Id).FirstOrDefault();
+                var severityId = newsDb.SeverityRatingId;
 
-                var materials = processedArticle.Ingredients;
+                var materials = processedArticle.ingredients.Distinct();
                 foreach(var material in materials)
                 {
                     var matId = dbContext.Materials.Where(_ => _.MaterialName == material).Select(_ => _.Id).FirstOrDefault();
-                    if(matId == null)
+                    if(matId == null || matId == 0)
                     {
                         var newMat = new Material
                         {
@@ -71,6 +85,7 @@ class Program
                     {
                         MaterialId = matId,
                         NewsId = newsId,
+                        DisruptionId = processedArticle.risk_score
                     };
                     dbContext.MaterialDisruptions.Add(matDisrupt);
                 }
@@ -79,13 +94,14 @@ class Program
                 dbContext.UpdatedTimes.Add(new UpdatedTime { LastUpdatedTimeUtc = currentTime });
 
                 await dbContext.SaveChangesAsync();
-                Console.WriteLine($"Inserted news: {article.Title}");
+                Console.WriteLine($"Inserted news: {article.title}");
             }
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error running job: {ex.Message}");
         }
+        Console.WriteLine("\n\n");
     }
 
     static async Task<List<NewsArticle>> GenerateNewsData(ChainVisionContext dbContext)
@@ -126,7 +142,7 @@ class Program
 
             var requestBody = new
             {
-                model = "gpt-3.5-turbo",
+                model = "gpt-4",
                 messages = new[]
                 {
                 new { role = "system", content = "You are a powerful news API generating news articles." },
@@ -166,18 +182,34 @@ class Program
                 cleanedText = $"[{cleanedText}]";
             }
 
+            string fixedJson = Regex.Replace(
+                cleanedText,
+                @"}\s*{",  // Match `}{` or `}\n{` patterns
+                "},{",     // Replace with `},{` to fix the JSON structure
+                RegexOptions.Multiline
+            );
+
+            // Clean up the string by removing markdown code block markers
+            string cleanedJson = Regex.Replace(fixedJson, @"```json", "").Replace("```", "");
+
+            // Now you have a proper JSON string
+            Console.WriteLine($"Cleaned Generated Text:\n{cleanedJson}");
+
+            // Deserialize it into your list of articles
             List<NewsArticle> articles;
             try
             {
-                articles = JsonConvert.DeserializeObject<List<NewsArticle>>(cleanedText);
+                articles = JsonConvert.DeserializeObject<List<NewsArticle>>(cleanedJson);
             }
             catch (JsonException ex)
             {
-                throw new Exception($"Failed to deserialize articles: {ex.Message}. Raw response: {cleanedText}");
+                throw new Exception($"Failed to deserialize articles: {ex.Message}. Raw response: {cleanedJson}");
             }
 
             Console.WriteLine($"Cleaned Generated Text: {articles.ToString()}");
             return articles;
+
+
         }
     }
 
@@ -188,32 +220,55 @@ class Program
             var content = new StringContent(JsonConvert.SerializeObject(article), Encoding.UTF8, "application/json");
 
             // Call your Python Flask AI model API
-            var response = await client.PostAsync("http://your-flask-api-endpoint.com/process-article", content);
+            var response = await client.PostAsync("http://10.35.61.54:5001/api/v1/risk-assessment", content);
             response.EnsureSuccessStatusCode();
 
             // Deserialize the processed article data
             var processedData = JsonConvert.DeserializeObject<ProccessedData>(await response.Content.ReadAsStringAsync());
+
+            int risk = processedData.risk_score;
+            if(risk < 3)
+            {
+                processedData.risk_score = 1;
+            }
+            else if(risk < 5){
+                processedData.risk_score = 2;
+            }
+            else if(risk < 7)
+            {
+                processedData.risk_score = 3;
+            }
+            else if (risk < 10)
+            {
+                processedData.risk_score = 4;
+            }
+            else
+            {
+                processedData.risk_score = 5;
+
+            }
             return processedData;
         }
     }
 
     public class NewsArticle
     {
-        public string Article_Id { get; set; }
-        public string Title { get; set; }
-        public string Link { get; set; }
-        public string[] Keywords { get; set; }
-        public string Description { get; set; }
-        public string Content { get; set; }
-        public DateTime PubDate { get; set; }
-        public string[] Country { get; set; }
-        public string Sentitment { get; set; }
+        public string article_id { get; set; }
+        public string title { get; set; }
+        public string link { get; set; }
+        public string[] keywords { get; set; }
+        public string description { get; set; }
+        public string content { get; set; }
+        public DateTime pubDate { get; set; }
+        public string[] country { get; set; }
+        public string sentitment { get; set; }
     }
 
     public class ProccessedData
     {
-        public string[] Ingredients { get; set; }
-        public string Risk_Level { get; set; }
-        public int Risk_Score { get; set; }
+        public string[] ingredients { get; set; }
+        public string cost_increase { get; set; }
+        public string risk_level { get; set; }
+        public int risk_score { get; set; }
     }
 }

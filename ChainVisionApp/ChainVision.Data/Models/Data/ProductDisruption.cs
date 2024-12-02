@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChainVision.Data.Models
+namespace ChainVision.Data.Models.Data
 {
     public partial class ProductDisruption
     {

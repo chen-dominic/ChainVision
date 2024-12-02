@@ -22,7 +22,7 @@
                 <thead>
                     <tr>
                         <th>Title</th>
-                        <th>Summary</th>
+                        <th>Article</th>
                         <th>Published Date</th>
                         <th>Country</th>
                         <th>Material</th>
@@ -35,14 +35,14 @@
                     {
                         <tr>
                             <td>@news.Title</td>
-                            <td>@news.DisplayText</td>
+                            <td>@news.Description</td>
                             <td>@news.PublichedDateUtc.ToString("yyyy-MM-dd")</td>
                             <td>@news.Country</td>
                             <td>@news.MaterialName</td>
                             <td style="background-color: @news.SeverityRatingColor; font-weight: 600">@news.SeverityRating</td>
                             <td>
                                 <a href="@news.ArticleUrl" target="_blank" class="icon"><i class="fa-solid fa-up-right-from-square"></i></a>
-                                <div onclick="callApiPlaceholder(@news.NewsId)" class="icon"><i class="fa-solid fa-user-gear"></i>  </div>
+                                <div onclick="generateMitigation(@news.NewsId)" class="icon"><i class="fa-solid fa-user-gear"></i>  </div>
                             </td>
                         </tr>
                     }
@@ -57,64 +57,101 @@
 
 </div>
 
+<script>
+    async function generateMitigation(newsId) {
+        try {
+            // Show a loading message or spinner
+            console.log(`Calling API for news ID: ${newsId}`);
+
+            // Send the POST request to the API
+            const response = await fetch('/Mitigations', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(newsId), // Send the newsId as the body
+            });
+
+            // Handle the response
+            if (!response.ok) {
+                throw new Error(`API call failed: ${response.statusText}`);
+            }
+
+            const mitigationStrategy = await response.text(); // Assuming API returns plain text
+            console.log(`Generated Mitigation Strategy: ${mitigationStrategy}`);
+
+            // Display the response in the UI
+            alert(`Mitigation Strategy: ${mitigationStrategy}`); // Temporary for testing
+        } catch (error) {
+            console.error('Error calling API:', error);
+            alert('An error occurred while generating mitigation strategy.');
+        }
+    }
+</script>
+
+
 <style>
-    .detail-container{
+    .detail-container {
         display: flex;
         flex-direction: column;
         align-items: center;
     }
+
     .product-img {
         height: 200px;
         width: auto;
         border-radius: 25px;
     }
-    .ingredient-list{
+
+    .ingredient-list {
         font-size: 0.8rem;
         font-style: italic;
     }
-    .news-box{
+
+    .news-box {
         border: 1px solid black;
         padding: 1rem;
         border-radius: 15px;
     }
 
-    .prod-table{
+    .prod-table {
         transition: all .2s ease-in-out;
     }
 
-    .prod-table thead {
-        font-size: .9rem;
-        font-weight: 600;
-        background-color: #7ac142;
-        color: white;
-    }
+        .prod-table thead {
+            font-size: .9rem;
+            font-weight: 600;
+            background-color: #7ac142;
+            color: white;
+        }
 
-    .prod-table tbody {
-        font-size: .9rem;
-        font-weight: 400;
-    }
+        .prod-table tbody {
+            font-size: .9rem;
+            font-weight: 400;
+        }
 
-    .prod-table tbody tr{
-        transition: all .1s linear;
+            .prod-table tbody tr {
+                transition: all .1s linear;
+            }
 
-    }
-
-    .prod-table tbody tr:hover {
-        background-color: #dddedc;
-    }
+                .prod-table tbody tr:hover {
+                    background-color: #dddedc;
+                }
 
     .icon {
         font-size: 1.5rem;
         cursor: pointer;
     }
-    .icon:hover{
-        filter: grayscale(0.3);
-    }
+
+        .icon:hover {
+            filter: grayscale(0.3);
+        }
+
     .fa-up-right-from-square {
         color: #2b3952;
     }
+
     .fa-user-gear {
         color: #b89523;
     }
-
 </style>

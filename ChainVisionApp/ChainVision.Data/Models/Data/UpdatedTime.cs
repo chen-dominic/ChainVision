@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChainVision.Data.Models
+namespace ChainVision.Data.Models.Data
 {
     public partial class UpdatedTime
     {
-        public DateTime? LastUpdatedTimeUtc { get; set; }
         public int Id { get; set; }
+        public DateTime? LastUpdatedTimeUtc { get; set; }
     }
 }

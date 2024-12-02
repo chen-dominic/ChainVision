@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace ChainVision.Data.Models
+namespace ChainVision.Data.Models.Data
 {
     public partial class ChainVisionContext : DbContext
     {
@@ -145,6 +145,8 @@ namespace ChainVision.Data.Models
             modelBuilder.Entity<UpdatedTime>(entity =>
             {
                 entity.ToTable("UpdatedTime");
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.LastUpdatedTimeUtc)
                     .HasColumnType("datetime")
