@@ -1,0 +1,191 @@
+﻿@model ChainVisionApp.Models.NewsPageViewModel
+
+@{
+    ViewData["Title"] = "Latest News";
+}
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
+    <script>
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/newsHub")
+            .build();
+
+        connection.on("ReceiveUpdate", (newsData, lastUpdated) => {
+            const newsTable = document.getElementById("newsTableBody");
+            newsTable.innerHTML = "";
+            newsData.forEach((news, index) => {
+                const row = `
+                            <tr class="${index >= 10 ? 'hidden' : ''}">
+                                <td>${news.title}</td>
+                                <td>${news.description}</td>
+                                <td>${news.publishedDateUtc}</td>
+                                <td>${news.country}</td>
+                                <td style="background-color: ${news.severityRatingColor}">${news.severityRating}</td>
+                                <td>${news.articleUrl}</td>
+                            </tr>
+                        `;
+                newsTable.innerHTML += row;
+            });
+
+            document.getElementById("lastUpdated").textContent = new Date(lastUpdated).toUTCString();
+        });
+
+        connection.start().catch(err => console.error(err));
+
+        function showMore() {
+            const hiddenRows = document.querySelectorAll(".hidden");
+            hiddenRows.forEach((row, index) => {
+                if (index < 10) {
+                    row.classList.remove("hidden");
+                }
+            });
+
+            if (document.querySelectorAll(".hidden").length === 0) {
+                document.getElementById("showMoreButton").style.display = "none";
+            }
+        }
+    </script>
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f9f9f9;
+    }
+
+    .title {
+        font-size: 2rem;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background-color: #fff;
+    }
+
+        .table th, .table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            font-size: 0.8rem;
+        }
+
+        .table th {
+            background-color: #7ac142;
+            font-weight: bold;
+            color: white;
+        }
+
+        .table tbody tr:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+    .button-container {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #7ac142;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn:hover {
+            background-color: #588f2c;
+            color: white;
+        }
+
+    .hidden {
+        display: none;
+    }
+
+    .last-updated {
+        font-size: 0.8rem;
+        color: #383838;
+    }
+
+    .icon {
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: #7ac142;
+    }
+
+        .icon:hover {
+            filter: grayscale(0.3);
+            color: #588f2c;
+        }
+
+    .sorting-links {
+        margin-bottom: 15px;
+        }
+
+        .sorting-links .btn {
+            margin-right: 10px;
+            padding: 8px 15px;
+            background-color: #7ac142;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .sorting-links .btn:hover {
+            background-color: #588f2c;
+        }
+
+        .sorting-links .btn.active {
+            background-color: #588f2c; /* Green color */
+            color: #f0f0f0;
+        }
+</style>
+
+<h1 class="title">News Articles</h1>
+<p class="last-updated">Last Updated: <span id="lastUpdated">@Model.LastUpdated?.ToString("yyyy-MM-dd hh:mm:ss tt 'EST'")</span></p>
+<div class="sorting-links">
+    <a href="@Url.Action("Index", new { sortBy = "date" })" class="btn @(Model.SortBy == "date" ? "active" : "")">Sort by Published Date</a>
+    <a href="@Url.Action("Index", new { sortBy = "severity" })" class="btn @(Model.SortBy == "severity" ? "active" : "")">Sort by Severity</a>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Description</th>
+            <th style="width: 90px;">Published Date</th>
+            <th>Country</th>
+            <th>Severity</th>
+            <th>URL</th>
+        </tr>
+    </thead>
+    <tbody id="newsTableBody">
+        @foreach (var news in Model.NewsData.Select((news, index) => new { news, index }))
+        {
+            <tr class="@(news.index >= 10 ? "hidden" : "")">
+                <td>@news.news.Title</td>
+                <td>@news.news.Description</td>
+                <td>@news.news.PublishedDateUtc.ToString("yyyy-MM-dd")</td>
+                <td>@news.news.Country</td>
+                <td style="background-color: @news.news.SeverityRatingColor">@news.news.SeverityRating</td>
+                <td><a href="@news.news.ArticleUrl" target="_blank" class="icon"><i class="fa-solid fa-up-right-from-square"></i></a></td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="button-container">
+    <button id="showMoreButton" class="btn" onclick="showMore()">Show More</button>
+</div>

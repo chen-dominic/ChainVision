@@ -1,4 +1,4 @@
-﻿using ChainVisionApp.Models.Data;
+﻿using ChainVision.Data.Models;
 
 namespace ChainVisionApp.Models
 {
@@ -9,5 +9,6 @@ namespace ChainVisionApp.Models
         public string ImageUrl { get; set; }
         public string? Ingredients { get; set; }
         public List<NewsMaterialData>? NewsMaterialData { get; set; }
+        public string? SortBy { get; set; }
     }
 }
