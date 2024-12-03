@@ -255,15 +255,33 @@ function populateTariffGraph() {
     myChart = new Chart(tar, {
         type: 'line',
         data: {
-            labels: ['CAD', 'USA', 'MEX'], 
-            datasets: [{
-                label: 'Tariff Distribution',
-                data: [0.33, 0.55, 0.1],  
-                backgroundColor: 'rgba(255, 99, 132, 0.2)',  
-                borderColor: 'rgba(255, 99, 132, 1)',  
-                borderWidth: 1,
-                fill: true  
-            }]
+            labels: ['CAD', 'USA', 'MEX'],
+            datasets: [
+                {
+                    label: 'Canada',
+                    data: [0.33, null, null],  // Only data for Canada
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Red for Canada
+                    borderColor: 'rgba(255, 99, 132, 1)',  // Red for Canada
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    label: 'USA',
+                    data: [null, 0.55, null],  // Only data for USA
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',  // Blue for USA
+                    borderColor: 'rgba(54, 162, 235, 1)',  // Blue for USA
+                    borderWidth: 2,
+                    fill: false,
+                },
+                {
+                    label: 'Mexico',
+                    data: [null, null, 0.1],  // Only data for Mexico
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Green for Mexico
+                    borderColor: 'rgba(75, 192, 192, 1)',  // Green for Mexico
+                    borderWidth: 2,
+                    fill: false,
+                }
+            ]
         },
         options: {
             responsive: true,
@@ -286,53 +304,13 @@ function populateTariffGraph() {
                         weight: 'bold'
                     },
                     padding: {
-                        bottom: 20  
+                        bottom: 20
                     }
                 }
             },
-            layout: {
-                padding: {
-                    top: 20,
-                    right: 10,
-                    bottom: 20,
-                    left: 10
-                }
-            },
-            scales: {
-                x: {
-                    title: {
-                        display: true,
-                        text: 'Countries', 
-                        font: {
-                            size: 14
-                        }
-                    },
-                    grid: {
-                        display: true,  
-                        drawOnChartArea: false  
-                    }
-                },
-                y: {
-                    title: {
-                        display: true,
-                        text: 'Tariff Percentage',  
-                        font: {
-                            size: 14
-                        }
-                    },
-                    beginAtZero: true, 
-                    ticks: {
-                        stepSize: 0.1,  
-                        max: 1,  
-                        min: 0  
-                    },
-                    grid: {
-                        display: true  
-                    }
-                }
-            }
         }
     });
+
 
 }
 
