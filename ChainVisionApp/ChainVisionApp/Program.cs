@@ -1,4 +1,5 @@
 using ChainVision.Data.Models;
+using ChainVisionApp.Hubs;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,6 +9,9 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ChainVisionContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddSignalR();
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
@@ -29,5 +33,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapHub<NewsHub>("/newsHub");
 
 app.Run();

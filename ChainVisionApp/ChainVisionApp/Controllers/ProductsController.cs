@@ -39,46 +39,57 @@ namespace ChainVisionApp.Controllers
         }
 
         [Route("Details/{id}")]
-        public IActionResult Details(int id)
+        public IActionResult Details(int id, string sortBy = "date")
         {
-            var productDetails = _cvContext.VwNewsProductDisruptionDetails
+            var newsMaterialData = _cvContext.VwNewsProductDisruptionDetails
                 .Where(_ => _.ProductId == id)
-                .ToList()
-                .GroupBy(pd => new { pd.ProductId, pd.ProductName, pd.ImageUrl })
-                .Select(g => new ProductNewsDetailViewModel
+                .Select(n => new NewsMaterialData
                 {
-                    ProductId = g.Key.ProductId,
-                    ProductName = g.Key.ProductName,
-                    ImageUrl = g.Key.ImageUrl,
-                    Ingredients = GetIngredientsByProductId(g.Key.ProductId),
-                    NewsMaterialData = GetNewsByProductId(g.Key.ProductId)
+                    NewsId = n.NewsId,
+                    ArticleId = n.ArticleId,
+                    Title = n.Title,
+                    Description = n.Description,
+                    DisplayText = n.DisplayText,
+                    SeverityRating = _cvContext.SeverityRatings.Where(s => s.Id == n.SeverityRatingId).Select(s => s.Description).FirstOrDefault(),
+                    SeverityRatingId = (int)n.SeverityRatingId,
+                    SeverityRatingColor = _cvContext.SeverityRatings.Where(s => s.Id == n.SeverityRatingId).Select(s => s.Hexcode).FirstOrDefault(),
+                    PublichedDateUtc = n.PublishedDateUtc,
+                    Country = n.Country,
+                    ArticleUrl = n.ArticleUrl,
+                    MaterialId = n.MaterialId,
+                    MaterialName = n.MaterialName
                 })
-                .FirstOrDefault();
+                .ToList();
+
+            // Apply sorting based on the `sortBy` parameter
+            if (sortBy == "date")
+            {
+                newsMaterialData = newsMaterialData.OrderByDescending(n => n.PublichedDateUtc).ToList();
+            }
+            else if (sortBy == "severity")
+            {
+                newsMaterialData = newsMaterialData.OrderByDescending(n => n.SeverityRatingId).ToList();
+            }
+
+            var productDetails = new ProductNewsDetailViewModel
+            {
+                ProductId = id,
+                ProductName = _cvContext.VwNewsProductDisruptionDetails.FirstOrDefault(_ => _.ProductId == id)?.ProductName,
+                ImageUrl = _cvContext.VwNewsProductDisruptionDetails.FirstOrDefault(_ => _.ProductId == id)?.ImageUrl,
+                Ingredients = GetIngredientsByProductId(id),
+                NewsMaterialData = newsMaterialData,
+                SortBy = sortBy
+            };
 
             if (productDetails == null)
             {
-                productDetails = _cvContext.VwProductMaterialDetails
-                .Where(_ => _.ProductId == id)
-                .ToList()
-                .GroupBy(pd => new { pd.ProductId, pd.ProductName, pd.ImageUrl })
-                .Select(g => new ProductNewsDetailViewModel
-                {
-                    ProductId = g.Key.ProductId,
-                    ProductName = g.Key.ProductName,
-                    ImageUrl = g.Key.ImageUrl,
-                    Ingredients = string.Join(", ", g.Select(pd => pd.MaterialName)),
-                    NewsMaterialData = null
-                })
-                .FirstOrDefault();
-                
-                if(productDetails == null)
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
 
             return View(productDetails);
         }
+
+
 
         private string GetIngredientsByProductId(int productId)
         {
@@ -91,17 +102,37 @@ namespace ChainVisionApp.Controllers
             return ingredients.Substring(0, ingredients.Length - 2);
         }
 
-        private List<NewsMaterialData> GetNewsByProductId(int productId)
+        private List<NewsMaterialData> GetNewsByProductId(int productId, bool sortBySeverityRating = false)
         {
-            List<NewsMaterialData> newsMaterialDatas = new List<NewsMaterialData>();
-            var relevantNews = _cvContext.VwNewsProductDisruptionDetails
-                                .Where(_ => _.ProductId == productId)
-                                .OrderByDescending(_ => _.PublishedDateUtc)
-                                .ToList();
-            foreach(var n in relevantNews)
+            var relevantNewsQuery = _cvContext.VwNewsProductDisruptionDetails
+                .Where(_ => _.ProductId == productId);
+
+            // Apply sorting based on the parameter
+            if (sortBySeverityRating)
             {
-                string severityRating = _cvContext.SeverityRatings.Where(_ => _.Id == n.SeverityRatingId).Select(_ => _.Description).FirstOrDefault();
-                string severityRatingColor = _cvContext.SeverityRatings.Where(_ => _.Id == n.SeverityRatingId).Select(_ => _.Hexcode).FirstOrDefault(); ;
+                relevantNewsQuery = relevantNewsQuery.OrderByDescending(_ => _.SeverityRatingId);
+            }
+            else
+            {
+                relevantNewsQuery = relevantNewsQuery.OrderByDescending(_ => _.PublishedDateUtc);
+            }
+
+            var relevantNews = relevantNewsQuery.ToList();
+
+            // Map results
+            List<NewsMaterialData> newsMaterialDatas = new List<NewsMaterialData>();
+            foreach (var n in relevantNews)
+            {
+                string severityRating = _cvContext.SeverityRatings
+                    .Where(_ => _.Id == n.SeverityRatingId)
+                    .Select(_ => _.Description)
+                    .FirstOrDefault();
+
+                string severityRatingColor = _cvContext.SeverityRatings
+                    .Where(_ => _.Id == n.SeverityRatingId)
+                    .Select(_ => _.Hexcode)
+                    .FirstOrDefault();
+
                 var newsDetails = new NewsMaterialData
                 {
                     NewsId = n.NewsId,
@@ -110,6 +141,7 @@ namespace ChainVisionApp.Controllers
                     Description = n.Description,
                     DisplayText = n.DisplayText,
                     SeverityRating = severityRating,
+                    SeverityRatingId = (int)n.SeverityRatingId,
                     SeverityRatingColor = severityRatingColor,
                     PublichedDateUtc = n.PublishedDateUtc,
                     Country = n.Country,
@@ -224,7 +256,7 @@ namespace ChainVisionApp.Controllers
 
         [Route("Mitigations")]
         [HttpPost]
-        public async Task<string> GetMitigations([FromBody] int newsId)
+        public async Task<string[]> GetMitigations([FromBody] int newsId)
         {
             var openAiApiKey = Environment.GetEnvironmentVariable("OPENAI_API_KEY");
 
@@ -236,17 +268,17 @@ namespace ChainVisionApp.Controllers
 
             using (var client = new HttpClient())
             {
-                string generatorQuery = $"Generate a mitigation strategy to help relief/avoid problems that this news artcle can cause to supply chain: {newsContent}";
+                string generatorQuery = $"Generate a mitigation strategy to help relief/avoid problems that this news artcle can cause to supply chain (150 words, not numbered list, divide it to paragraphs with no title): {newsContent}";
 
                 var requestBody = new
                 {
-                    model = "gpt-3.5-turbo",
+                    model = "gpt-4",
                     messages = new[]
                     {
-                        new { role = "system", content = "You are a strong problem solver specializing in Chain Supply mitigation." },
+                        new { role = "system", content = "You are a strong problem solver specializing in Chain Supply mitigations." },
                         new { role = "user", content = generatorQuery }
                     },
-                    max_tokens = 500, // Adjust token limit as needed
+                    max_tokens = 300, // Adjust token limit as needed
                     temperature = 1 // Adjust creativity
                 };
 
@@ -272,7 +304,9 @@ namespace ChainVisionApp.Controllers
                     throw new Exception("No response generated by OpenAI.");
                 }
 
-                return generatedText;
+                var paragraphs = generatedText.Split("\n");
+
+                return paragraphs;
             }
         }
     }

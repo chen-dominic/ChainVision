@@ -1,10 +1,10 @@
 ﻿@model ChainVisionApp.Models.ProductNewsDetailViewModel
 @{
-    ViewData["Title"] = Model.ProductName + " Details";
+    ViewData["Title"] = Model.ProductName;
 }
 
 <div class="container-fluid detail-container">
-    <a class="back-btn" href="javascript:history.back()">
+    <a class="back-btn" href="https://localhost:7278/Products">
         <i class="fa-solid fa-circle-chevron-left"></i>
     </a>
     <h1 class="title">@Model.ProductName</h1>
@@ -16,38 +16,49 @@
 
     @if (Model.NewsMaterialData != null)
     {
+
         <div class="news-box">
             <h2 class="subtitle">Related News</h2>
+
+            <div class="sorting-links">
+                <a href="@Url.Action("Details", new { id = Model.ProductId, sortBy = "date" })" class="btn @(Model.SortBy == "date" ? "active" : "")">Sort by Published Date</a>
+                <a href="@Url.Action("Details", new { id = Model.ProductId, sortBy = "severity" })" class="btn @(Model.SortBy == "severity" ? "active" : "")">Sort by Severity</a>
+            </div>
+
+
             <table class="table table-striped prod-table">
                 <thead>
                     <tr>
                         <th>Title</th>
                         <th>Article</th>
-                        <th>Published Date</th>
+                        <th style="width: 90px;">Published Date</th>
                         <th>Country</th>
                         <th>Material</th>
                         <th>Severity</th>
                         <th></th>
                     </tr>
                 </thead>
-                <tbody>
-                    @foreach (var news in Model.NewsMaterialData)
+                <tbody id="newsTableBody">
+                    @foreach (var news in Model.NewsMaterialData.Select((news, index) => new { news, index }))
                     {
-                        <tr>
-                            <td>@news.Title</td>
-                            <td>@news.Description</td>
-                            <td>@news.PublichedDateUtc.ToString("yyyy-MM-dd")</td>
-                            <td>@news.Country</td>
-                            <td>@news.MaterialName</td>
-                            <td style="background-color: @news.SeverityRatingColor; font-weight: 600">@news.SeverityRating</td>
+                        <tr class="@(news.index >= 10 ? "hidden" : "")">
+                            <td>@news.news.Title</td>
+                            <td>@news.news.Description</td>
+                            <td>@news.news.PublichedDateUtc.ToString("yyyy-MM-dd")</td>
+                            <td>@news.news.Country</td>
+                            <td>@news.news.MaterialName</td>
+                            <td style="background-color: @news.news.SeverityRatingColor; font-weight: 600">@news.news.SeverityRating</td>
                             <td>
-                                <a href="@news.ArticleUrl" target="_blank" class="icon"><i class="fa-solid fa-up-right-from-square"></i></a>
-                                <div onclick="generateMitigation(@news.NewsId)" class="icon"><i class="fa-solid fa-user-gear"></i>  </div>
+                                <a href="@news.news.ArticleUrl" target="_blank" class="icon"><i class="fa-solid fa-up-right-from-square"></i></a>
+                                <div onclick="generateMitigation(@news.news.NewsId)" class="icon"><i class="fa-solid fa-user-gear"></i>  </div>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            <div class="button-container">
+                <button id="showMoreButton" class="btn" onclick="showMore()">Show More</button>
+            </div>
         </div>
     }
     else
@@ -55,40 +66,82 @@
         <h1 class="subtitle">No News Data</h1>
     }
 
+    <div class="modal fade mitigations" id="mitigationModal" tabindex="-1" aria-labelledby="mitigationModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="mitigationModalLabel">Mitigation Strategy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="loadingSpinner" class="d-flex justify-content-center align-items-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                    <div id="mitigationResult" class="d-none">
+                        <p id="mitigationBody"></p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
-    async function generateMitigation(newsId) {
-        try {
-            // Show a loading message or spinner
-            console.log(`Calling API for news ID: ${newsId}`);
+    function generateMitigation(newsId) {
+        console.log(`Calling API for news ID: ${newsId}`);
 
-            // Send the POST request to the API
-            const response = await fetch('/Mitigations', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(newsId), // Send the newsId as the body
-            });
+        // Show modal
+        const modal = new bootstrap.Modal(document.getElementById('mitigationModal'));
+        modal.show();
 
-            // Handle the response
-            if (!response.ok) {
-                throw new Error(`API call failed: ${response.statusText}`);
+        // Reset modal content
+        document.getElementById('loadingSpinner').classList.remove('d-none');
+        document.getElementById('mitigationResult').classList.add('d-none');
+        document.getElementById('mitigationBody').textContent = ''; // Clear body
+
+        $.ajax({
+            url: 'https://localhost:7278/Products/Mitigations',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(newsId),
+            success: function (mitigationStrategy) {
+                // Hide spinner and show result
+                document.getElementById('loadingSpinner').classList.add('d-none');
+                document.getElementById('mitigationResult').classList.remove('d-none');
+
+                // Loop through the paragraphs and append them to the body
+                mitigationStrategy.forEach(paragraph => {
+                    const p = document.createElement('p');
+                    p.textContent = paragraph;
+                    document.getElementById('mitigationBody').appendChild(p);
+                });
+            },
+            error: function (xhr, status, error) {
+                console.error('Error calling API:', error);
+                alert('An error occurred while generating mitigation strategy.');
+                modal.hide();
             }
+        });
+    }
 
-            const mitigationStrategy = await response.text(); // Assuming API returns plain text
-            console.log(`Generated Mitigation Strategy: ${mitigationStrategy}`);
+    function showMore() {
+        const hiddenRows = document.querySelectorAll(".hidden");
+        hiddenRows.forEach((row, index) => {
+            if (index < 10) {
+                row.classList.remove("hidden");
+            }
+        });
 
-            // Display the response in the UI
-            alert(`Mitigation Strategy: ${mitigationStrategy}`); // Temporary for testing
-        } catch (error) {
-            console.error('Error calling API:', error);
-            alert('An error occurred while generating mitigation strategy.');
+        if (document.querySelectorAll(".hidden").length === 0) {
+            document.getElementById("showMoreButton").style.display = "none";
         }
     }
 </script>
-
 
 <style>
     .detail-container {
@@ -112,27 +165,33 @@
         border: 1px solid black;
         padding: 1rem;
         border-radius: 15px;
+        width: 100%;
     }
 
     .prod-table {
         transition: all .2s ease-in-out;
+        width: 100%;
     }
 
         .prod-table thead {
-            font-size: .9rem;
+            font-size: 0.8rem;
             font-weight: 600;
             background-color: #7ac142;
             color: white;
         }
 
         .prod-table tbody {
-            font-size: .9rem;
+            font-size: 0.8rem;
             font-weight: 400;
         }
 
             .prod-table tbody tr {
-                transition: all .1s linear;
+                transition: all 0.1s linear;
             }
+
+                .prod-table tbody tr.hidden {
+                    display: none;
+                }
 
                 .prod-table tbody tr:hover {
                     background-color: #dddedc;
@@ -154,4 +213,53 @@
     .fa-user-gear {
         color: #b89523;
     }
+
+    .button-container {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #7ac142;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn:hover {
+            background-color: #588f2c;
+            color: white;
+        }
+
+    .modal-content{
+        max-width: 40vw;
+        font-size: 0.8rem;
+    }
+
+    .sorting-links {
+        margin-bottom: 15px;
+    }
+
+        .sorting-links .btn {
+            margin-right: 10px;
+            padding: 8px 15px;
+            background-color: #7ac142;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .sorting-links .btn:hover {
+            background-color: #588f2c;
+        }
+
+            .sorting-links .btn.active {
+                background-color: #588f2c; /* Green color */
+                color: #f0f0f0;
+            }
+
 </style>

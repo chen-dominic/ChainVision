@@ -130,7 +130,7 @@ class Program
                 $"Keywords (string[], array of keywords related to supply chain)," +
                 $"Description (string, general summary of article, 1-2 sentences)," +
                 $"Content (string, full article body)," +
-                $"PubDate (DateTime, article published date, must be after 12-02-2024 to 12-04-2024)," +
+                $"PubDate (DateTime, article published date, must be between December 2nd, 2024 to December 4th, 2024)," +
                 $"Country (string[], array of countries related to article)" +
                 "}";
 
