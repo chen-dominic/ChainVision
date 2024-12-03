@@ -66,15 +66,30 @@ function populateAlerts() {
     });
 }
 
-function timer() {
-    let counter = 0;
 
-    setInterval(() => {
-        console.log("Value: " + counter);
-        populateAlerts(counter);
-    }, 60000); // Every minute
-}
+document.getElementById("Inventory").addEventListener('click', function () {
+    if (myChart) {
+        myChart.destroy();
+    }
+    console.log("Inventory");
+    populateInventoryGraph();
+});
 
+document.getElementById("Price").addEventListener('click', function () {
+    if (myChart) {
+        myChart.destroy();
+    }
+    console.log("price")
+    populatePriceGraph();
+});
+
+document.getElementById("Tariff").addEventListener('click', function () {
+    if (myChart) {
+        myChart.destroy();
+    }
+    console.log("tariff")
+    populateTariffGraph();
+});
 function populateInventoryGraph() {
     if (myChart) {
         myChart.destroy();
@@ -259,25 +274,25 @@ function populateTariffGraph() {
             datasets: [
                 {
                     label: 'Canada',
-                    data: [0.33, null, null],  // Only data for Canada
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Red for Canada
-                    borderColor: 'rgba(255, 99, 132, 1)',  // Red for Canada
+                    data: [0.33, 0.34, 0.23],  
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)', 
+                    borderColor: 'rgba(255, 99, 132, 1)',  
                     borderWidth: 2,
                     fill: false,
                 },
                 {
                     label: 'USA',
-                    data: [null, 0.55, null],  // Only data for USA
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',  // Blue for USA
-                    borderColor: 'rgba(54, 162, 235, 1)',  // Blue for USA
+                    data: [0.44, 0.55, 0.56],  
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',  
+                    borderColor: 'rgba(54, 162, 235, 1)', 
                     borderWidth: 2,
                     fill: false,
                 },
                 {
                     label: 'Mexico',
-                    data: [null, null, 0.1],  // Only data for Mexico
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',  // Green for Mexico
-                    borderColor: 'rgba(75, 192, 192, 1)',  // Green for Mexico
+                    data: [0.23, 0.12, 0.1],  
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',  
+                    borderColor: 'rgba(75, 192, 192, 1)',  
                     borderWidth: 2,
                     fill: false,
                 }
@@ -315,29 +330,7 @@ function populateTariffGraph() {
 }
 
 
-document.getElementById("Inventory").addEventListener('click', function () {
-    if (myChart) {
-        myChart.destroy();
-    }
 
-    populateInventoryGraph();
-});
-
-document.getElementById("Price").addEventListener('click', function () {
-    if (myChart) {
-        myChart.destroy();
-    }
-
-    populatePriceGraph();
-});
-
-document.getElementById("Tariff").addEventListener('click', function () {
-    if (myChart) {
-        myChart.destroy();
-    }
-
-    populateTariffGraph();
-});
 
 
 
