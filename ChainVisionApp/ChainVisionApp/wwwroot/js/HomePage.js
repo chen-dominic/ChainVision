@@ -102,24 +102,31 @@ function populateInventoryGraph() {
             labels: ['Mar 25','May 25','Jul 25','Oct 25','Mar 26','May 26'],
             datasets: [
                 {
-                    label: 'Flour',
+                    label: 'Cocoa',
                     data: [21.57, 20.27, 19.58, 39.42, 19.55, 18.54, 18.06],
                     backgroundColor: 'brown',
                     borderColor: 'brown',
                     borderWidth: 4
                 },
                 {
-                    label: 'Flour',
+                    label: 'Wheat',
                     data: [23.57, 23.27, 24.58, 25.42, 27.55, 29.54, 33.06],
                     backgroundColor: 'black',
                     borderColor: 'black',
                     borderWidth: 1
                 },
                 {
-                    label: 'Blue Berries',
+                    label: 'Sugar',
                     data: [22, 34, 21, 12, 33, 22, 2, 2, 22, 22, 22, 22, 22],
                     backgroundColor: 'blue',
                     borderColor: 'blue',
+                    borderWidth: 8
+                },
+                {
+                    label: 'Spring Wheat',
+                    data: [22, 34, 21, 12, 33, 22, 2, 2, 22, 22, 22, 22, 22],
+                    backgroundColor: 'Purple',
+                    borderColor: 'Purple',
                     borderWidth: 8
                 }
             ]
