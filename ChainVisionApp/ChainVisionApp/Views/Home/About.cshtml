@@ -1,0 +1,100 @@
+﻿@{
+    ViewData["Title"] = "About Us";
+}
+
+<h1 class="title">About Us</h1>
+
+<div class="about-us-container">
+    <div class="team-member">
+        <img src="/images/sam.jpg" alt="Sam">
+        <h2>Samhitha Balamoni</h2>
+        <p>Mobile Application Developer Co-op</p>
+        <p><a href="mailto:samhitha.balamoni@fgfbrands.com">samhitha.balamoni@fgfbrands.com</a></p>
+    </div>
+    <div class="team-member">
+        <img src="/images/dominic.jpeg" alt="Dominic">
+        <h2>Dominic Chen</h2>
+        <p>.NET Software Developer Co-op</p>
+        <p><a href="mailto:dominic.chen@fgfbrands.com">dominic.chen@fgfbrands.com</a></p>
+    </div>
+    <div class="team-member">
+        <img src="https://media.licdn.com/dms/image/v2/D5603AQHZTjvltTAVxw/profile-displayphoto-shrink_800_800/profile-displayphoto-shrink_800_800/0/1693336959494?e=1738800000&v=beta&t=nf02wGVB8_tri9a2zliq5D-l5w3ItedvBM269-Mo718" alt="Casey">
+        <h2>Casey Jiminez</h2>
+        <p>IT Cyber Security Coordinator Co-op</p>
+        <p><a href="mailto:casey.jimenezcenteno@fgfbrands.com">casey.jimenezcenteno@fgfbrands.com</a></p>
+    </div>
+    <div class="team-member">
+        <img src="/images/adam.jfif" alt="Adam">
+        <h2>Adam Levere</h2>
+        <p>IT Software QA Co-op</p>
+        <p><a href="mailto:Adam.levere@fgfbrands.com">adam.levere@fgfbrands.com</a></p>
+    </div>
+    <div class="team-member">
+        <img src="/images/adib.jfif" alt="Adib">
+        <h2>Adib Sheikh</h2>
+        <p>IT Sys Admin Co-op</p>
+        <p><a href="mailto:adib.sheikh@fgfbrands.com">adib.sheikh@fgfbrands.com</a></p>
+    </div>
+</div>
+
+<style>
+    body{
+        overflow: hidden;
+    }
+    .title {
+        text-align: center;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .about-us-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1.5rem;
+    }
+
+    .team-member {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        width: 300px;
+        text-align: center;
+        padding: 1rem;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .team-member img {
+            width: 150px;
+            height: 130px;
+            margin-bottom: 1rem;
+            border-radius: 30%;
+            object-fit: cover; /* Ensures fixed dimensions without distorting aspect ratio */
+        }
+
+        .team-member h2 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .team-member p {
+            font-size: 0.7rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .team-member a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+            .team-member a:hover {
+                text-decoration: underline;
+            }
+</style>

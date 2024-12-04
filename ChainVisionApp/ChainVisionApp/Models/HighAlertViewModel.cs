@@ -10,6 +10,6 @@
         public DateTime PublishedDateUtc { get; set; }
         public string? Country { get; set; }
         public string ArticleUrl { get; set; } = null!;
-        public string Materials { get; set; } = null!;
+        public List<string> Materials { get; set; } = null!;
     }
 }

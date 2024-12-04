@@ -63,8 +63,9 @@ namespace ChainVisionApp.Controllers
                                       .ToList()
                     }
                 );
+            var utcNow = DateTime.UtcNow;
 
-            var highAlerts = _cvContext.VwNewsProductDisruptionDetails.Where(_ => _.SeverityRatingId == 4 || _.SeverityRatingId == 5).OrderByDescending(_ => _.PublishedDateUtc).ToList();
+            var highAlerts = _cvContext.VwNewsProductDisruptionDetails.Where(_ => (_.SeverityRatingId == 4 || _.SeverityRatingId == 5) && _.PublishedDateUtc > utcNow.AddDays(-7)).OrderByDescending(_ => _.PublishedDateUtc).ToList();
             var alertData = highAlerts.GroupBy(g => new { g.Title, g.Description, g.SeverityRatingId, g.PublishedDateUtc, g.Country, g.ArticleUrl })
                             .Select(group => new HighAlertViewModel
                             {
@@ -74,10 +75,26 @@ namespace ChainVisionApp.Controllers
                                 PublishedDateUtc = group.Key.PublishedDateUtc,
                                 Country = group.Key.Country,
                                 ArticleUrl = group.Key.ArticleUrl,
-                                Materials = string.Join(", ", group.Select(_ => _.MaterialName).Distinct())
+                                Materials = group.Select(_ => _.MaterialName).ToList()
                             }).ToList();
 
-            var utcNow = DateTime.UtcNow;
+            List<MaterialNewsModel> alertMaterialNews = new List<MaterialNewsModel>();
+            var materials = _cvContext.Materials.Select(_ => _.MaterialName).Distinct().ToList();
+            foreach (var m in materials)
+            {
+                var highSeverityList = alertData.Where(_ => _.Materials.Contains(m)).ToList();
+                if(highSeverityList.Count > 0)
+                {
+                    var matNews = new MaterialNewsModel
+                    {
+                        Material = m,
+                        NewsList = highSeverityList,
+                        NewsCount = highSeverityList.Count,
+                    };
+                    alertMaterialNews.Add(matNews);
+                }
+            }
+            alertMaterialNews = alertMaterialNews.OrderByDescending(_ => _.NewsCount).ToList();
 
             var lowSeverityNews = _cvContext.VwNewsProductDisruptionDetails.Where(_ => _.SeverityRatingId < 4 && _.PublishedDateUtc > utcNow.AddDays(-1)).OrderByDescending(_ => _.PublishedDateUtc).ToList();
             var todayData = lowSeverityNews.GroupBy(g => new { g.Title, g.Description, g.SeverityRatingId, g.PublishedDateUtc, g.Country, g.ArticleUrl })
@@ -89,14 +106,8 @@ namespace ChainVisionApp.Controllers
                                 PublishedDateUtc = group.Key.PublishedDateUtc,
                                 Country = group.Key.Country,
                                 ArticleUrl = group.Key.ArticleUrl,
-                                Materials = string.Join(", ", group.Select(_ => _.MaterialName).Distinct())
+                                Materials = group.Select(_ => _.MaterialName).ToList()
                             }).ToList();
-
-            foreach (var alert in alertData)
-            {
-                var hexcode = _cvContext.SeverityRatings.Where(_ => _.Id == alert.SeverityRatingId).Select(_ => _.Hexcode).FirstOrDefault();
-                alert.SeverityRatingHexcode = hexcode;
-            }
 
             foreach(var t in todayData)
             {
@@ -115,7 +126,7 @@ namespace ChainVisionApp.Controllers
                 SugarData = sugarChartData,
                 WheatData = wheatChartData,
                 Inventory = inventoryChartData,
-                AlertNewsData = alertData,
+                AlertNewsData = alertMaterialNews,
                 TodayNewsData = todayData,
                 LatestUpdated = easternTime
             };
@@ -123,6 +134,10 @@ namespace ChainVisionApp.Controllers
             return View(data);
         }
 
+        public IActionResult About()
+        {
+            return View();
+        }
 
         public IActionResult Privacy()
         {

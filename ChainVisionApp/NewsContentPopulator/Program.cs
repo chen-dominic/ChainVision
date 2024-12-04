@@ -122,7 +122,8 @@ class Program
         {
             string existingArticleIds = $"( {string.Join(",", dbContext.News.Select(_ => _.ArticleId).ToList())} )";
             string ingredientsList = $"( {string.Join(", ", dbContext.Materials.Select(_ => _.MaterialName).ToList())} )";
-
+            var yesterday = DateTime.Now.Date.AddDays(-1);
+            var today = DateTime.Now.Date;
             string jsonFormatText = "{" +
                 $"Article_Id (string, different from any of these: {existingArticleIds})," +
                 $"Title (string, title of article)," +
@@ -130,7 +131,7 @@ class Program
                 $"Keywords (string[], array of keywords related to supply chain)," +
                 $"Description (string, general summary of article, 1-2 sentences)," +
                 $"Content (string, full article body)," +
-                $"PubDate (DateTime, article published date, must be between December 2nd, 2024 to December 4th, 2024)," +
+                $"PubDate (DateTime, article published date, must be between {yesterday} and {today})," +
                 $"Country (string[], array of countries related to article)" +
                 "}";
 
