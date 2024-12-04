@@ -1,53 +1,509 @@
 ﻿@model ChainVisionApp.Models.DashboardViewModel
-@{
-    ViewData["Title"] = "ChainVision";
-    var sugarDataJson = Json.Serialize(Model.SugarData);
-    var wheatDataJson = Json.Serialize(Model.WheatData);
-    var cocoaDataJson = Json.Serialize(Model.CocoaData);
-    var springwheatDataJson = Json.Serialize(Model.SpringWheatData);
-    var alerts = Json.Serialize(Model.AlertNewsData);
-    var inventoryJson = Json.Serialize(Model.Inventory);
-}
 
-<div class="containerMain">
-        <div id="columnOne" class="columns-vertical">
-            <div class="d-flex flex-column justify-content-center align-items-center gap-2 mt-4">
-                <h1 class="Title">Dashboard</h1>                    
-                <div id="Canvas-box" class="box" >
-                    <canvas id="Canvas-Main"></canvas>
-                </div>
+<div class="container" style="overflow: hidden;">
+    <div class="left-side">
+        <h1 class="home-title">Dashboard</h1>
+
+        <div class="graph-container">
+            <div class="graph-switcher">
+                <button class="tab-button active" data-target="materialChart">Material Cost</button>
+                <button class="tab-button" data-target="inventoryChart">Inventory</button>
+                <button class="tab-button" data-target="tariffChart">Tariffs</button>
             </div>
-            <div class="d-flex justify-content-center align-items-center gap-2 mt-3">
-                <button id="Price" class="Graph-Switch">Price</button>
-                <button id="Inventory" class="Graph-Switch">Live Inventory</button>
-                <button id="Tariff" class="Graph-Switch">Tariffs</button>
+            <canvas id="materialChart" style="display: block;"></canvas>
+            <canvas id="inventoryChart" style="display: none;"></canvas>
+            <canvas id="tariffChart" style="display: none;"></canvas>
+        </div>
+
+        <div class="today-news">
+            <h1 class="today-title">Today</h1>
+            <div class="todays">
+                @if (Model.TodayNewsData.Count > 0)
+                {
+                    @foreach (var data in Model.TodayNewsData)
+                    {
+                        <a href="@data.ArticleUrl" style="text-decoration: none;" target="_blank">
+                            <div class="today-item" style="background-color: @data.SeverityRatingHexcode">
+                                @data.Title
+                            </div>
+                        </a>
+                    }
+                }
+                else
+                {
+                    <h1 class="alert-title" style="font-weight: 600; margin-top: 1rem;">No News</h1>
+                }
             </div>
         </div>
-        <div id="columnTwo" class="columns-vertical">
-            <h2>Alerts</h2>
-                <ul id="Alerts">
-                    <li>No current alerts</li>
-                </ul>
+    </div>
+    <div class="right-side">
+        <div class="high-alerts">
+            <h1 class="alert-title">Alerts</h1>
+            <p class="last-updated">Last updated at @Model.LatestUpdated EST</p>
+            <div class="alerts">
+                @if (Model.AlertNewsData.Count > 0)
+                {
+                    @foreach (var data in Model.AlertNewsData)
+                    {
+                        <div class="alert-item">
+                            <div class="alert-header" onclick="toggleAlert(this)">
+                                @data.Material
+                                <div>
+                                    <span>@data.NewsCount</span>
+                                    <span class="toggle-icon"><i class="fa-solid fa-caret-down"></i></span>
+                                </div>
+                            </div>
+                            <div class="alert-content" style="display: none;">
+                                @foreach (var news in data.NewsList)
+                                {
+                                    <a href="@news.ArticleUrl" style="text-decoration: none;" target="_blank">
+                                        <div class="news-item" style="background-color: @(news.SeverityRatingId == 5 ? "#ff9e9e" : "#ffb8b8");">
+                                            <p class="news-title">@news.Title</p>
+                                            <p class="news-body">@news.Description</p>
+                                            <div class="news-footer">
+                                                <p>@news.Country</p>
+                                                <p>@news.PublishedDateUtc</p>
+                                            </div>
+                                        </div>
+                                    </a>
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <h1 class="alert-title" style="font-weight: 600; margin-top: 3rem;">No Alerts</h1>
+                }
+            </div>
         </div>
+
     </div>
 </div>
-<footer>
-    <div>
-        Last Updated (UTC): @Model.LatestUpdated
-    </div>
-</footer>
 
-<script type="text/javascript">
-    console.log("Sugar Razor Data", @Html.Raw(sugarDataJson));
-    window.SugarData = JSON.parse('@Html.Raw(sugarDataJson)');
-    window.WheatData = JSON.parse('@Html.Raw(wheatDataJson)');
-    window.CocoaData = JSON.parse('@Html.Raw(cocoaDataJson)');
-    console.log("Cocoa Razor Data", @Html.Raw(cocoaDataJson));
-    window.SpringWheatData = JSON.parse('@Html.Raw(springwheatDataJson)');
-    console.log("Alert Razor Data", @Html.Raw(alerts));
-    window.alertData = JSON.parse('@Html.Raw(alerts)');
-    console.log("Inventory Razor Data", @Html.Raw(inventoryJson));
-    window.inventoryData = JSON.parse('@Html.Raw(inventoryJson)');
+<style>
+    .container{
+        padding: 0;
+        gap: 5px;
+        overflow-y: hidden;
+    }
+    .left-side{
+        flex: 4;
+        display: flex;
+        flex-direction: column;
+    }
+    .right-side {
+        flex: 2;
+        display: flex;
+        flex-direction: column;
+    }
+    .home-title{
+        font-size: 1.6rem;
+        font-weight: 700;
+        margin-left: 1rem;
+    }
+    .graph-container{
+        border: 1px solid black;
+        border-radius: 15px;
+        overflow: hidden;
+    }
+    .graph-switcher {
+        display: flex;
+        justify-content: start;
+        margin-bottom: 0;
+        background-color: #b9d9a0;
+        border-bottom: 1px solid #8f8f8f;
+    }
 
+    .tab-button {
+        padding: 5px 15px;
+        border: none;
+        cursor: pointer;
+        background-color: #7ac142;
+        border-radius: 5px 15px 0 0;
+        font-family: 'Poppins', sans-serif;
+        color: white;
+        font-size: 0.7rem;
+    }
+
+    .tab-button:hover{
+        background-color: #588f2c;
+
+    }
+
+    .tab-button.active {
+        background-color: #609c30;
+    }
+
+    .graph-container {
+        position: relative;
+    }
+
+    canvas {
+        max-width: 100%;
+    }
+
+    .alert-title{
+        font-weight: 800;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+
+    .last-updated {
+        font-weight: 400;
+        font-size: 0.7rem;
+        text-align: center;
+        color: #6e6e6e;
+    }
+
+    .high-alerts {
+        overflow-y: hidden;
+    }
+    .alerts{
+        max-height: 507px;
+        overflow-y: scroll;
+    }
+
+    .alert-item {
+        background-color: #f1f1f1;
+        border: 1px solid #ccc;
+        border-radius: 8px; 
+        margin-bottom: 10px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+    .alert-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px;
+        cursor: pointer;
+        background-color: #7ac142;
+        font-weight: 600;
+        font-size: 0.8rem;
+    }
+
+        .alert-header:hover {
+            background-color: #588f2c;
+        }
+
+    .toggle-icon {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: white;
+    }
+
+    .news-item {
+        padding: 5px;
+        border-bottom: 1px solid black;
+        color: black;
+    }
+
+    .news-title {
+        font-size: 0.7rem;
+        font-weight: 600;
+    }
+
+    .news-body {
+        font-size: 0.7rem;
+        font-weight: 400;
+    }
+
+    .news-footer {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.6rem;
+        font-weight: 400;
+        color: #6e6e6e;
+    }
+
+    .today-news {
+        overflow-y: hidden;
+    }
+
+    .todays {
+        max-height: 130px;
+        overflow-y: scroll;
+    }
+
+    .today-title {
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-align: left;
+        margin-top: 0.6rem;
+    }
+
+    .today-item {
+        color: #f7fff0;
+        padding: 3px 5px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+        transition: all .2s ease-in-out;
+        cursor: pointer;
+        border-radius: 10px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .today-item:hover, .alert-item:hover{
+        filter: grayscale(0.3);
+    }
+</style>
+
+<script>
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', function () {
+            // Remove active class from all buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+
+            // Hide all canvases
+            document.querySelectorAll('.graph-container canvas').forEach(canvas => {
+                canvas.style.display = 'none';
+            });
+
+            // Add active class to clicked button
+            this.classList.add('active');
+
+            // Show the targeted canvas
+            const targetId = this.getAttribute('data-target');
+            document.getElementById(targetId).style.display = 'block';
+        });
+    });
+
+    function toggleAlert(header) {
+        const content = header.nextElementSibling;
+        const toggleIcon = header.querySelector('.toggle-icon');
+
+        if (content.style.display === 'none' || !content.style.display) {
+            content.style.display = 'block';
+            toggleIcon.innerHTML = '<i class="fa-solid fa-caret-up"></i>';
+        } else {
+            content.style.display = 'none';
+            toggleIcon.innerHTML = '<i class="fa-solid fa-caret-down"></i>';
+        }
+    }
+
+
+    // Data for materials (Cocoa, Spring Wheat, Sugar, Wheat)
+    var cocoaData = @Html.Raw(Json.Serialize(Model.CocoaData));
+    var springWheatData = @Html.Raw(Json.Serialize(Model.SpringWheatData));
+    var sugarData = @Html.Raw(Json.Serialize(Model.SugarData));
+    var wheatData = @Html.Raw(Json.Serialize(Model.WheatData));
+
+    // Prepare chart labels (Time)
+    var labels = cocoaData.map(item => item.date || 'Unknown');
+
+    // Create the material data chart
+    var materialChartCtx = document.getElementById('materialChart').getContext('2d');
+    var materialChart = new Chart(materialChartCtx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Cocoa',
+                    data: cocoaData.map(item => item.previous || 0),
+                    borderColor: 'rgba(84, 42, 0, 1)',
+                    backgroundColor: 'rgba(84, 42, 0, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    fill: true
+                },
+                {
+                    label: 'Spring Wheat',
+                    data: springWheatData.map(item => item.previous || 0),
+                    borderColor: 'rgba(194, 247, 0, 1)',
+                    backgroundColor: 'rgba(194, 247, 0, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    fill: true
+                },
+                {
+                    label: 'Sugar',
+                    data: sugarData.map(item => item.previous || 0),
+                    borderColor: 'rgba(2, 0, 125, 1)',
+                    backgroundColor: 'rgba(2, 0, 125, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    fill: true
+                },
+                {
+                    label: 'Wheat',
+                    data: wheatData.map(item => item.previous || 0),
+                    borderColor: 'rgba(102, 191, 0, 1)',
+                    backgroundColor: 'rgba(102, 191, 0, 0.1)',
+                    borderWidth: 2,
+                    pointRadius: 2,
+                    fill: true
+                }
+            ]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "Month",
+                        font: { size: 14, family: 'Poppins' },
+                        color: '#000'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: "Price per Unit ¢",
+                        font: { size: 14, family: 'Poppins' },
+                        color: '#000'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Material Cost 2024",
+                    font: { size: 18, weight: 'bold', family: 'Poppins' },
+                    color: '#000'
+                },
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+
+    // Inventory data
+    var inventoryData = @Html.Raw(Json.Serialize(Model.Inventory));
+
+    // Generate labels for the inventory chart from the first dataset
+    var inventoryLabels = inventoryData["Flour"].labels;
+
+    // Create the inventory chart
+    var inventoryChartCtx = document.getElementById('inventoryChart').getContext('2d');
+    var inventoryChart = new Chart(inventoryChartCtx, {
+        type: 'line',
+        data: {
+            labels: inventoryLabels,
+            datasets: Object.keys(inventoryData).map((ingredient) => ({
+                label: ingredient,
+                data: inventoryData[ingredient].quantities,
+                borderColor: getColor(ingredient),
+                backgroundColor: getLowColor(ingredient),
+                borderWidth: 2,
+                pointRadius: 2,
+                fill: true
+            }))
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "Month",
+                        font: { size: 14, family: 'Poppins' },
+                        color: '#000'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: "Inventory (kg)",
+                        font: { size: 14, family: 'Poppins' },
+                        color: '#000'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Material Inventory 2024",
+                    font: { size: 18, weight: 'bold', family: 'Poppins' },
+                    color: '#000'
+                },
+                legend: {
+                    position: 'top'
+                }
+            }
+        }
+    });
+
+    var tariffData = {
+        labels: ["Brazil", "United States", "India", "Saudi Arabia", "China", "Russia", "Turkey", "Japan", "Italy", "UK", "Germany", "France", "Canada"],
+        values: [8.6, 7.5, 5.8, 4.9, 3.8, 3.6, 3.5, 2.5, 1.8, 1.8, 1.8, 1.8, 1.5]
+    };
+
+    // Create the tariff chart
+    var tariffChartCtx = document.getElementById('tariffChart').getContext('2d');
+    var tariffChart = new Chart(tariffChartCtx, {
+        type: 'bar',
+        data: {
+            labels: tariffData.labels,
+            datasets: [{
+                label: 'Tariff Rate (%)',
+                data: tariffData.values,
+                backgroundColor: "rgba(121, 193, 66, 0.8)",
+            }]
+        },
+        options: {
+            responsive: true,
+            indexAxis: 'y',
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: "Tariff Rate (%)",
+                        font: { size: 14, family: 'Poppins' },
+                        color: '#000'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Tariff Rates by Country 2024",
+                    font: { size: 18, weight: 'bold', family: 'Poppins' },
+                    color: '#000'
+                },
+                legend: {
+                    display: false
+                },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'right',
+                    formatter: function (value) {
+                        return value + "%";
+                    },
+                    font: {
+                        size: 12,
+                        family: 'Poppins'
+                    },
+                    color: "#000"
+                }
+            }
+        }
+    });
+
+    function getColor(ingredient) {
+        if (ingredient == "Flour") return "#787878";
+        if (ingredient == "Sugar") return "#02007d";
+        if (ingredient == "Milk") return "#47a85d";
+        if (ingredient == "Butter") return "#c7d900";
+        return getRandomColor();
+    }
+
+    function getLowColor(ingredient) {
+        if (ingredient == "Flour") return "rgba(120, 120, 120, 0.1)";
+        if (ingredient == "Sugar") return "rgba(2, 0, 125, 0.1)";
+        if (ingredient == "Milk") return "rgba(71, 168, 93, 0.1)";
+        if (ingredient == "Butter") return "rgba(199, 217, 0, 0.1)";
+        return getRandomColor();
+    }
+
+    function getRandomColor() {
+        const letters = '0123456789ABCDEF';
+        return '#' + Array(6).fill().map(() => letters[Math.floor(Math.random() * 16)]).join('');
+    }
 </script>
-<script type="text/javascript" src="~/js/HomePage.js"></script>

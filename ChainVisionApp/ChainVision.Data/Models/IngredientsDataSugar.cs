@@ -11,8 +11,8 @@ namespace ChainVision.Data.Models
         public double Open { get; set; }
         public double High { get; set; }
         public decimal Low { get; set; }
-        public decimal Previous { get; set; }
+        public decimal? Previous { get; set; }
         public int Volume { get; set; }
-        public DateTime Time { get; set; }
+        public DateTime? Time { get; set; }
     }
 }

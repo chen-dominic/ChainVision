@@ -24,4 +24,8 @@
     <ProjectReference Include="..\ChainVision.Data\ChainVision.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\images\" />
+  </ItemGroup>
+
 </Project>
