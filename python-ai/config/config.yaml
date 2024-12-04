@@ -24,6 +24,14 @@ risk_keywords:
   "harvest failure": 4
   "tariffs": 4
   "food safety scandal": 5
+  "geopolitical tension": 4
+  "import bans": 4
+  "logistics breakdown": 5
+  "factory shutdown": 5
+  "worker strike": 4
+  "energy crisis": 5
+  "power outage": 3
+  "railroad strike": 4
 
 # Critical ingredients specific to a bakery company
 critical_ingredients:
@@ -65,6 +73,10 @@ critical_ingredients:
     keywords: ["water", "filtered water", "spring water"]
   "Baking Soda":
     keywords: ["baking soda", "sodium bicarbonate", "bicarbonate of soda"]
+  "Vanilla":
+    keywords: ["vanilla", "vanilla extract", "vanillin"]
+  "Blueberry":
+    keywords: ["blueberry", "blueberries", "fruit"]
 
 # Negative keywords to help classify tone (indicating a disruption, risk, or problem)
 negative_keywords:
@@ -97,24 +109,30 @@ negative_keywords:
   - "flood"
   - "earthquake"
   - "drought"
+  - "import ban"
+  - "blockade"
+  - "price volatility"
 
-# Optional: Further expansion on specific regional risks or additional factors affecting the bakery supply chain
+# Regional risks with potential impacts
 regional_risks:
   "weather_patterns":
-    description: "Severe weather changes such as extreme heat, storms, or frost."
-    keywords: ["heatwave", "frost", "storm", "flood", "hurricane"]
+    description: "Severe weather changes such as extreme heat, storms, frost, or drought that could disrupt supply chains or crop yields."
+    keywords: ["heatwave", "frost", "storm", "flood", "hurricane", "drought"]
   "economic_conditions":
-    description: "Economic downturns and financial instability that affect costs."
+    description: "Economic downturns and financial instability that affect production costs, logistics, or consumer demand."
     keywords: ["economic downturn", "recession", "bankruptcy", "default"]
   "trade_policies":
-    description: "Changes in trade policies, tariffs, and restrictions that affect imports."
-    keywords: ["tariff", "trade embargo", "import restriction", "export ban"]
+    description: "Changes in trade policies, tariffs, or restrictions that affect imports and exports."
+    keywords: ["tariff", "trade embargo", "import restriction", "export ban", "quota"]
   "labor_issues":
-    description: "Worker strikes, shortages, and other labor-related disruptions."
-    keywords: ["strike", "labor shortage", "work stoppage", "unemployment"]
+    description: "Worker strikes, labor shortages, or other labor-related disruptions that impact production or distribution."
+    keywords: ["strike", "labor shortage", "work stoppage", "unemployment", "union negotiations"]
   "health_crisis":
-    description: "Pandemics or health-related crises that affect worker availability and supply."
+    description: "Health-related crises such as pandemics or outbreaks that affect workforce availability and supply chains."
     keywords: ["pandemic", "virus", "health crisis", "lockdown", "quarantine"]
+  "geopolitical_risks":
+    description: "Geopolitical tensions, conflicts, or sanctions that disrupt international supply chains."
+    keywords: ["sanctions", "conflict", "trade war", "blockade"]
 
 # Additional ingredient tracking section
 ingredient_tracking:
@@ -126,5 +144,14 @@ ingredient_tracking:
     - "peanut butter"
   custom_ingredient_keywords:
     blueberry: ["blueberry", "blueberries", "fruit"]
-    vanilla_extract: ["vanilla", "vanilla extract", "vanillin"]
+    vanilla: ["vanilla", "vanilla extract", "vanillin"]
+    peanut_butter: ["peanut butter", "peanuts", "nut butter"]
 
+# Predictive impact factors
+predictive_impact_factors:
+  delays:
+    description: "Expected production or transportation delays caused by supply chain issues."
+    thresholds:
+      low: 1
+      medium: 3
+      high: 5

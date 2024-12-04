@@ -60,6 +60,34 @@ def risk_assessment_endpoint():
         logging.error(f"Error in risk assessment: {e}")
         return jsonify({"error": str(e)}), 500
     """
+    REST API endpoint for assessing risk in articles.
+    """
+    try:
+        # Parse input JSON
+        data = request.get_json()
+        if not data or 'content' not in data:
+            return jsonify({"error": "Missing 'content' field in request"}), 400
+        
+        content = data['content']
+        # Process content
+        risk_score = risk_assessment.assess_article(content)
+        risk_level = risk_assessment.get_risk_level(risk_score)
+        ingredients = risk_assessment.extract_ingredients(content)
+        cost_increase = risk_assessment.predict_cost_increase(content)
+
+        # Return response
+        return jsonify({
+            "content": content,
+            "risk_score": risk_score,
+            "risk_level": risk_level,
+            "ingredients": ingredients,
+            "cost_increase": cost_increase  # Include predicted cost increase in response
+        }), 200
+
+    except Exception as e:
+        logging.error(f"Error in risk assessment: {e}")
+        return jsonify({"error": str(e)}), 500
+    """
     REST API endpoint for assessing risk in articles and predicting cost increase risk.
     """
     try:
@@ -96,4 +124,4 @@ def risk_assessment_endpoint():
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
