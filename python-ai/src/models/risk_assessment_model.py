@@ -29,13 +29,28 @@ class RiskAssessment:
         return ingredients
 
     def predict_cost_increase(self, content):
-        """
-        Predict the cost increase based on the article's content and historical data.
-        This method will return a predicted cost increase factor (could be a percentage).
-        """
-        # You can integrate machine learning here for predictions.
-        # If you have historical data or trained models, apply the model to the article content
-        # Here we'll just simulate it with a simple condition
+        cost_increase = 0  # Default: no cost increase
+
+        # Expanded logic to match more conditions that can lead to cost increases
+
+        # If there are keywords related to disruptions in supply chains or tariffs
+        if "shortage" in content.lower() or "delay" in content.lower():
+            cost_increase = 5  # 5% increase for shortages and delays
+        elif "tariff" in content.lower():
+            cost_increase = 10  # 10% increase for tariffs
+        elif "strike" in content.lower() or "bottleneck" in content.lower():
+            cost_increase = 8  # 8% increase for labor strikes and bottlenecks
+
+        # You can add more conditions to handle different types of disruptions
+        # For example, if there's a mention of "raw materials" or "price hike", you can increase the cost
+        elif "raw materials" in content.lower() or "price hike" in content.lower():
+            cost_increase = 7  # 7% increase for raw material disruptions or price hikes
+
+        return cost_increase
+ 
+            # You can integrate machine learning here for predictions.
+            # If you have historical data or trained models, apply the model to the article content
+            # Here we'll just simulate it with a simple condition
 
         cost_increase = 0  # Default: no cost increase
 
