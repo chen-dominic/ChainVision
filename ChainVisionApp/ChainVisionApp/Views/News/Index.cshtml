@@ -7,32 +7,6 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>
     <script>
-        const connection = new signalR.HubConnectionBuilder()
-            .withUrl("/newsHub")
-            .build();
-
-        connection.on("ReceiveUpdate", (newsData, lastUpdated) => {
-            const newsTable = document.getElementById("newsTableBody");
-            newsTable.innerHTML = "";
-            newsData.forEach((news, index) => {
-                const row = `
-                            <tr class="${index >= 10 ? 'hidden' : ''}">
-                                <td>${news.title}</td>
-                                <td>${news.description}</td>
-                                <td>${news.publishedDateUtc}</td>
-                                <td>${news.country}</td>
-                                <td style="background-color: ${news.severityRatingColor}">${news.severityRating}</td>
-                                <td>${news.articleUrl}</td>
-                            </tr>
-                        `;
-                newsTable.innerHTML += row;
-            });
-
-            document.getElementById("lastUpdated").textContent = new Date(lastUpdated).toUTCString();
-        });
-
-        connection.start().catch(err => console.error(err));
-
         function showMore() {
             const hiddenRows = document.querySelectorAll(".hidden");
             hiddenRows.forEach((row, index) => {

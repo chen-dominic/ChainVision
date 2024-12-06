@@ -68,7 +68,10 @@ namespace ChainVisionApp.Controllers
             }
             else if (sortBy == "severity")
             {
-                newsMaterialData = newsMaterialData.OrderByDescending(n => n.SeverityRatingId).ToList();
+                newsMaterialData = newsMaterialData
+                    .OrderByDescending(n => n.SeverityRatingId) // Primary sort: by SeverityRatingId (descending)
+                    .ThenByDescending(n => n.PublichedDateUtc)           // Secondary sort: by PublishedDateUtc (ascending)
+                    .ToList();
             }
 
             var productDetails = new ProductNewsDetailViewModel

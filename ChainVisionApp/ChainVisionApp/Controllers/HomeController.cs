@@ -96,7 +96,7 @@ namespace ChainVisionApp.Controllers
             }
             alertMaterialNews = alertMaterialNews.OrderByDescending(_ => _.NewsCount).ToList();
 
-            var lowSeverityNews = _cvContext.VwNewsProductDisruptionDetails.Where(_ => _.SeverityRatingId < 4 && _.PublishedDateUtc > utcNow.AddDays(-1)).OrderByDescending(_ => _.PublishedDateUtc).ToList();
+            var lowSeverityNews = _cvContext.News.Where(_ => _.SeverityRatingId < 4 && _.PublishedDateUtc > utcNow.AddDays(-1)).OrderByDescending(_ => _.PublishedDateUtc).ToList();
             var todayData = lowSeverityNews.GroupBy(g => new { g.Title, g.Description, g.SeverityRatingId, g.PublishedDateUtc, g.Country, g.ArticleUrl })
                             .Select(group => new HighAlertViewModel
                             {
@@ -106,7 +106,6 @@ namespace ChainVisionApp.Controllers
                                 PublishedDateUtc = group.Key.PublishedDateUtc,
                                 Country = group.Key.Country,
                                 ArticleUrl = group.Key.ArticleUrl,
-                                Materials = group.Select(_ => _.MaterialName).ToList()
                             }).ToList();
 
             foreach(var t in todayData)

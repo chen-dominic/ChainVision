@@ -11,20 +11,41 @@ class Program
 {
     static async Task Main(string[] args)
     {
+        var cts = new CancellationTokenSource();
+
+        Console.CancelKeyPress += (sender, e) =>
+        {
+            e.Cancel = true;
+            cts.Cancel();
+        };
+
+        // Set up dependency injection
         var services = new ServiceCollection();
         services.AddDbContext<ChainVisionContext>(options =>
             options.UseSqlServer("Server=1235dc-sqldev;Database=ChainVision;Integrated Security=True;Encrypt=True;TrustServerCertificate=True"));
 
         var serviceProvider = services.BuildServiceProvider();
         var dbContext = serviceProvider.GetService<ChainVisionContext>();
-        Timer timer = new Timer(async _ =>
-        {
-            await RunJobAsync(dbContext);
-        }, null, TimeSpan.Zero, TimeSpan.FromMinutes(1));
 
-        // Keep the application running
-        await Task.Delay(Timeout.Infinite);
+        Console.WriteLine("Job started. Press Ctrl+C to stop...");
+
+        while (!cts.Token.IsCancellationRequested)
+        {
+            try
+            {
+                await RunJobAsync(dbContext);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+
+            await Task.Delay(TimeSpan.FromMinutes(5), cts.Token);
+        }
+
+        Console.WriteLine("Job stopped.");
     }
+
 
     static async Task RunJobAsync(ChainVisionContext dbContext)
     {
@@ -221,7 +242,7 @@ class Program
             var content = new StringContent(JsonConvert.SerializeObject(article), Encoding.UTF8, "application/json");
 
             // Call your Python Flask AI model API
-            var response = await client.PostAsync("http://10.35.61.54:5001/api/v1/risk-assessment", content);
+            var response = await client.PostAsync("http://10.35.61.89:5001/api/v1/risk-assessment", content);
             response.EnsureSuccessStatusCode();
 
             // Deserialize the processed article data
