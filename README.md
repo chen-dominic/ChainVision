@@ -4,12 +4,12 @@
 
 ### Dashboard
 | **Cost Chart** | **Inventory Chart** | **Tarff Chart** | **Alerts** |
-|---------------|---------------|------------|
+|---------------|---------------|------------|------------|
 | ![Cost Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-1.png) | ![Inventory Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-2.png) | ![Tariff Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-3.png) | ![Tariff Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/alerts.png) |
 
 ### Products
 | **Products**  | **Search Products** | **Add Product** |
-| ![Products](/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png)  | ![Navigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) | ![Add Product](path/to/product-add.png) |
+| ![Products](/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png)  | ![Navigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) | ![Add Product](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) |
 
 ### Product Details
 | **Details**  | **Mitigation Strategy** |
