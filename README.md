@@ -17,7 +17,7 @@
 |---------------|---------------|
 | ![Details](/ChainVisionApp/ChainVisionApp/wwwroot/images/item.png)  | ![Mitigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/mitigation.png) |
 
-### More...
+### More
 | **News**  | **About Us** |
 |---------------|---------------|
 | ![News](/ChainVisionApp/ChainVisionApp/wwwroot/images/news.png)  | ![About Us](/ChainVisionApp/ChainVisionApp/wwwroot/images/about-us.png) |
