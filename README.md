@@ -1,11 +1,24 @@
 # ChainVision
 
 ## Gallery
-| **Dashboard** | **News Page** | **Alerts** |
+
+### Dashboard
+| **Cost Chart** | **Inventory Chart** | **Tarff Chart** | **Alerts** |
 |---------------|---------------|------------|
-| ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-1.png) | ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-2) | ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-3) |
-| **Products**  | **Navigation** | **More...** |
-| ![Products](path/to/products-screenshot.png)  | ![Navigation](path/to/navigation-bar-screenshot.png) | ![More](path/to/other-screenshot.png) |
+| ![Cost Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-1.png) | ![Inventory Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-2.png) | ![Tariff Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-3.png) | ![Tariff Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/alerts.png) |
+
+### Products
+| **Products**  | **Search Products** | **Add Product** |
+| ![Products](/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png)  | ![Navigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) | ![Add Product](path/to/product-add.png) |
+
+### Product Details
+| **Details**  | **Mitigation Strategy** |
+| ![Details](/ChainVisionApp/ChainVisionApp/wwwroot/images/item.png)  | ![Mitigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/mitigation.png) |
+
+### More...
+| **News**  | **About Us** |
+| ![News](/ChainVisionApp/ChainVisionApp/wwwroot/images/news.png)  | ![About Us](/ChainVisionApp/ChainVisionApp/wwwroot/images/about-us.png) |
+
 
 ## Features Overview
 
