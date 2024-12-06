@@ -9,14 +9,17 @@
 
 ### Products
 | **Products**  | **Search Products** | **Add Product** |
-| ![Products](/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png)  | ![Navigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) | ![Add Product](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) |
+|---------------|---------------|------------|
+| ![Products](/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png)  | ![Navigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) | ![Add Product](/ChainVisionApp/ChainVisionApp/wwwroot/images/product-add.png) |
 
 ### Product Details
 | **Details**  | **Mitigation Strategy** |
+|---------------|---------------|
 | ![Details](/ChainVisionApp/ChainVisionApp/wwwroot/images/item.png)  | ![Mitigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/mitigation.png) |
 
 ### More...
 | **News**  | **About Us** |
+|---------------|---------------|
 | ![News](/ChainVisionApp/ChainVisionApp/wwwroot/images/news.png)  | ![About Us](/ChainVisionApp/ChainVisionApp/wwwroot/images/about-us.png) |
 
 
