@@ -3,7 +3,7 @@
 ## Gallery
 | **Dashboard** | **News Page** | **Alerts** |
 |---------------|---------------|------------|
-| ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-1) | ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-2) | ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-3) |
+| ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-1.png) | ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-2) | ![Dashboard](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-3) |
 | **Products**  | **Navigation** | **More...** |
 | ![Products](path/to/products-screenshot.png)  | ![Navigation](path/to/navigation-bar-screenshot.png) | ![More](path/to/other-screenshot.png) |
 
