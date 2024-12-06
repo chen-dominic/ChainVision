@@ -68,3 +68,21 @@
 ## Conclusion
 
 ChainVision revolutionizes supply chain management by leveraging data and algorithms for proactive solutions. It minimizes waste, prevents disruptions, and ensures seamless operations. With ChainVision, businesses can achieve long-term success while optimizing their supply chain processes.
+
+
+## Gallery
+
+### Dashboard
+<div style="width:100%; overflow-x:auto; white-space:nowrap;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/home-1.png" alt="Cost Chart" style="display:inline-block; margin-right:10px; height:200px;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/home-2.png" alt="Inventory Chart" style="display:inline-block; margin-right:10px; height:200px;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/home-3.png" alt="Tariff Chart" style="display:inline-block; margin-right:10px; height:200px;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/alerts.png" alt="Alerts" style="display:inline-block; height:200px;">
+</div>
+
+### Products
+<div style="width:100%; overflow-x:auto; white-space:nowrap;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png" alt="Products" style="display:inline-block; margin-right:10px; height:200px;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png" alt="Search Products" style="display:inline-block; margin-right:10px; height:200px;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/product-add.png" alt="Add Product" style="display:inline-block; height:200px;">
+</div>
