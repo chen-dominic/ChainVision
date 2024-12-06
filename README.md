@@ -1,28 +1,5 @@
 # ChainVision
 
-## Gallery
-
-### Dashboard
-| **Cost Chart** | **Inventory Chart** | **Tarff Chart** | **Alerts** |
-|---------------|---------------|------------|------------|
-| ![Cost Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-1.png) | ![Inventory Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-2.png) | ![Tariff Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/home-3.png) | ![Tariff Chart](/ChainVisionApp/ChainVisionApp/wwwroot/images/alerts.png) |
-
-### Products
-| **Products**  | **Search Products** | **Add Product** |
-|---------------|---------------|------------|
-| ![Products](/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png)  | ![Navigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png) | ![Add Product](/ChainVisionApp/ChainVisionApp/wwwroot/images/product-add.png) |
-
-### Product Details
-| **Details**  | **Mitigation Strategy** |
-|---------------|---------------|
-| ![Details](/ChainVisionApp/ChainVisionApp/wwwroot/images/item.png)  | ![Mitigation](/ChainVisionApp/ChainVisionApp/wwwroot/images/mitigation.png) |
-
-### More
-| **News**  | **About Us** |
-|---------------|---------------|
-| ![News](/ChainVisionApp/ChainVisionApp/wwwroot/images/news.png)  | ![About Us](/ChainVisionApp/ChainVisionApp/wwwroot/images/about-us.png) |
-
-
 ## Features Overview
 
 ### Core Functionalities
@@ -85,4 +62,10 @@ ChainVision revolutionizes supply chain management by leveraging data and algori
     <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/products.png" alt="Products" style="display:inline-block; margin-right:10px; height:200px;">
     <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/search-product.png" alt="Search Products" style="display:inline-block; margin-right:10px; height:200px;">
     <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/product-add.png" alt="Add Product" style="display:inline-block; height:200px;">
+</div>
+
+### More
+<div style="width:100%; overflow-x:auto; white-space:nowrap;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/news.png" alt="News" style="display:inline-block; margin-right:10px; height:200px;">
+    <img src="/ChainVisionApp/ChainVisionApp/wwwroot/images/about-us.png" alt="About Us" style="display:inline-block; margin-right:10px; height:200px;">
 </div>
